@@ -6,16 +6,21 @@ class DelayedFor{
         this.step = step
         this.delay = delay
         this.cursor = from
+        this.continue = true
     }
 
     go(){
-        if(this.cursor < this.to){
+        if(this.cursor < this.to && this.continue){
             var me = this
-            setTimeout(function(){
+            this.timeout = setTimeout(function(){
                 me.next()
                 me.cursor += me.step
                 me.go()
             }, this.delay)
         }
+    }
+
+    stop(){
+        this.continue = false
     }
 }
