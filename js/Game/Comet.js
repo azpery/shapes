@@ -14,6 +14,7 @@ class Comet extends Shape {
     this.radius = radius;
     this.xVector = xVector;
     this.yVector = yVector;
+    this.drawline = drawline;
   }
 
   move(speed = 1, didMoved) {
@@ -38,6 +39,7 @@ class Comet extends Shape {
   stop(){
       this.clearCurrentPosition();
       this.moveEngine.stop();
+      delete this.moveEngine
   }
 
   clearCurrentPosition() {
