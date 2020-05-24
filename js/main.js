@@ -2,14 +2,13 @@ var c = document.getElementById("cnvs");
 var ctx = c.getContext("2d");
 
 var playground = new SpacePlayGround(1664, 1000, ctx, 50, {
-  bounce: true,
-  speed: 37,
+  bounce: false,
+  speed: 100,
   respawnSpeed: 10,
-  keepTrails: true,
-  maxObjects:10,
-  xRespawn: 800,
-  yRespawn: 500,
+  keepTrails: false,
+  maxObjects:20,
   colors: ["#000000"],
-  maxSize:2
+  minSize: 3,
+  maxSize:6
 });
 playground.play();

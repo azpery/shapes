@@ -5,6 +5,7 @@ class Shape{
         this.width = width 
         this.height = height
         this.context = context
+        this.id = new Random(0, 1000000000, 1).get()
     }
 
     draw(){

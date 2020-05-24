@@ -2,6 +2,7 @@ class SpacePlayGround extends PlayGround {
   constructor(width, height, context, gridSize, option = new PlayGroundOption()) {
     super(width, height, context, 0, gridSize);
     this.option = Object.assign(new PlayGroundOption(), option);
+    this.physic = new Physic(width, height, option);
   }
 
   play() {
@@ -12,18 +13,16 @@ class SpacePlayGround extends PlayGround {
 
     var me = this;
 
-    var i = 0;
     this.moveEngine = new DelayedFor(
       0,
       100000000000000,
       1,
       function () {
-        if (i < me.option.maxObjects) {
-          i++;
+        if (me.physic.objects.length < me.option.maxObjects) {
           var x = me.option.xRespawn ? me.option.xRespawn : new Random(0, me.width, 1).get();
           var y = me.option.yRespawn ? me.option.yRespawn : new Random(0, me.height, 1).get();
-          var xVector = new Random(-10, 20, 1).get();
-          var yVector = new Random(-10, 20, 1).get();
+          var xVector = new Random(-5, 10, 1).get();
+          var yVector = new Random(-5, 10, 1).get();
           var radius = new Random(me.option.minSize, me.option.maxSize, 1).get();
           let shape = new Comet(
             x,
@@ -33,24 +32,11 @@ class SpacePlayGround extends PlayGround {
             colorPicker.pick(),
             xVector,
             yVector,
-            me.option.keepTrails
+            me.option.keepTrails,
+            me.option.maxCollidedSize
           );
-          shape.move(me.option.speed, function (x, y) {
-            if (x > me.width || y > me.height || x < 0 || y < 0) {
-              if (me.option.bounce) {
-                if (x > me.width || x < 0) shape.xVector = -shape.xVector;
-                if (y > me.height || y < 0) shape.yVector = -shape.yVector;
-              } else {
-                i--;
-                shape.stop();
-                y = null;
-
-                xVector = null;
-                yVector = null;
-                radius = null;
-              }
-            }
-          });
+          me.physic.addObject(shape);
+          me.physic.move(shape)
         }
       },
       this.option.respawnSpeed

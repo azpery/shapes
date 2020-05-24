@@ -19,4 +19,6 @@ class PlayGroundOption{
     maxSize = 35;
     //Min size of shape
     minSize = 1;
+    //Max size of collided object
+    maxCollidedSize = 70;
 }
