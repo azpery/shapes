@@ -8,11 +8,11 @@ var playground = new SpacePlayGround(1664, 1000, ctx, 50, {
   keepTrails: false,
   maxObjects: 50,
   minSize: 1,
-  maxSize: 3,
+  maxSize: 4,
   maxCollidedSize: 100,
-  maxSpeedOfObject: 2,
-  attractionRadius: 50,
-  attractionStrength: 6,
+  maxSpeedOfObject: 3,
+  attractionRadius: 30,
+  attractionStrength: 7,
   colors: ["#00897b", "#00695c", "#eeeeee", "#5d4037"],
 });
 playground.play();
