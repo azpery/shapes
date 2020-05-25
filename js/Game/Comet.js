@@ -20,7 +20,7 @@ class Comet extends Shape {
     this.maxCollidedSize = maxCollidedSize;
   }
 
-  move(speed = 1, didMoved) {
+  move(speed = 1, willMove, didMoved) {
     var x = this.x;
     var y = this.y;
     var me = this;
@@ -32,6 +32,7 @@ class Comet extends Shape {
         if (!me.stoped) {
           x += me.xVector;
           y += me.yVector;
+          willMove(x, y);
           me.updatePosition(x, y);
           didMoved(x, y);
         }
@@ -51,13 +52,18 @@ class Comet extends Shape {
   }
 
   clearCurrentPosition() {
-    if (!this.drawline)
-      this.context.clearRect(
-        this.x - this.radius,
-        this.y - this.radius,
-        this.radius * 2,
-        this.radius * 2
-      );
+    if (!this.drawline) {
+      this.context.beginPath();
+      this.context.arc(this.x, this.y, this.radius + 1, 0, 2 * Math.PI, false);
+      this.context.fillStyle = "#263238";
+      this.context.fill();
+    }
+    // this.context.clearRect(
+    //   Math.ceil(this.x) - Math.ceil(this.radius) - 1,
+    //   Math.ceil(this.y) - Math.ceil(this.radius) - 1,
+    //   Math.ceil(this.radius) * 2 + 2,
+    //   Math.ceil(this.radius) * 2 + 2
+    // );
   }
 
   updatePosition(x, y) {
@@ -74,16 +80,27 @@ class Comet extends Shape {
     this.context.fill();
   }
 
-  getSurface(){
-      return Math.PI * (this.radius * this.radius)
+  getSurface() {
+    return Math.PI * (this.radius * this.radius);
   }
 
   isColliding(shape) {
+    var distance = this.getDistanceFrom(shape);
+
+    return distance < this.radius + shape.radius;
+  }
+
+  getDistanceFrom(shape) {
     var dx = this.x - shape.x;
     var dy = this.y - shape.y;
     var distance = Math.sqrt(dx * dx + dy * dy);
+    return distance;
+  }
 
-    return distance < this.radius + shape.radius;
+  isAttracting(shape, radius) {
+    var distance = this.getDistanceFrom(shape);
+
+    return distance < this.radius * radius + shape.radius;
   }
 
   collide(object) {
@@ -97,9 +114,10 @@ class Comet extends Shape {
       from = this;
     }
 
-    var wantedRadius = Math.floor(Math.sqrt((to.getSurface() + from.getSurface())/Math.PI));
-    to.radius =
-    wantedRadius;
+    var wantedRadius = Math.sqrt(
+      (to.getSurface() + from.getSurface()) / Math.PI
+    );
+    to.radius = wantedRadius;
 
     var ratio = from.radius / to.radius;
     if (

@@ -1,4 +1,6 @@
 class PlayGroundOption{
+    width = 1600;
+    height = 1000;
     // Makes de balls bounce against the wall
     bounce = false;
     //Speed execution
@@ -21,4 +23,12 @@ class PlayGroundOption{
     minSize = 1;
     //Max size of collided object
     maxCollidedSize = 70;
+
+    maxSpeedOfObject = 10;
+
+    destroyAfterDisapering = true;
+
+    attractionRadius = 50;
+
+    attractionStrength = 6;
 }
