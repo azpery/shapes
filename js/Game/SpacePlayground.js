@@ -21,8 +21,8 @@ class SpacePlayGround extends PlayGround {
         if (me.physic.objects.length < me.option.maxObjects) {
           var x = me.option.xRespawn ? me.option.xRespawn : new Random(0, me.width, 1).get();
           var y = me.option.yRespawn ? me.option.yRespawn : new Random(0, me.height, 1).get();
-          var xVector = new Random(-5, 10, 1).get();
-          var yVector = new Random(-5, 10, 1).get();
+          var xVector = new Random(-20, 30, 1).get();
+          var yVector = new Random(-20, 30, 1).get();
           var radius = new Random(me.option.minSize, me.option.maxSize, 1).get();
           let shape = new Comet(
             x,

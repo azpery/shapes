@@ -74,6 +74,10 @@ class Comet extends Shape {
     this.context.fill();
   }
 
+  getSurface(){
+      return Math.PI * (this.radius * this.radius)
+  }
+
   isColliding(shape) {
     var dx = this.x - shape.x;
     var dy = this.y - shape.y;
@@ -93,9 +97,9 @@ class Comet extends Shape {
       from = this;
     }
 
-    var wantedRadius = to.radius + from.radius;
+    var wantedRadius = Math.floor(Math.sqrt((to.getSurface() + from.getSurface())/Math.PI));
     to.radius =
-      wantedRadius > to.maxCollidedSize ? to.maxCollidedSize : wantedRadius;
+    wantedRadius;
 
     var ratio = from.radius / to.radius;
     if (
