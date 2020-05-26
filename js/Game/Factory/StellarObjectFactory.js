@@ -6,8 +6,8 @@ class StellarObjectFactory {
     var y = option.yRespawn
       ? option.yRespawn
       : new Random(0, option.height, 1).get();
-    var xVector = new Random(-1 * option.maxSpeedOfObject, 2 * option.maxSpeedOfObject, 1).get();
-    var yVector = new Random(-1 * option.maxSpeedOfObject, 2 * option.maxSpeedOfObject, 1).get();
+    var xVector = option.xVector == undefined ? new Random(-1 * option.maxSpeedOfObject, 2 * option.maxSpeedOfObject, 1).get() : option.xVector;
+    var yVector = option.yVector == undefined ? new Random(-1 * option.maxSpeedOfObject, 2 * option.maxSpeedOfObject, 1).get() : option.yVector;
     var radius = new Random(option.minSize, option.maxSize, 1).get();
     let shape = new Comet(
       x,

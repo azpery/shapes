@@ -36,8 +36,10 @@ class TestPlayground extends PlayGround {
     object2.minSize = 5;
     object2.maxSize = 6;
     object2.maxSpeedOfObject = 2;
-    object2.xRespawn = 1239;
-    object2.yRespawn = 700;
+    object2.xRespawn = 620;
+    object2.yRespawn = 500;
+    object2.xVector = 0;
+    object2.yVector = -2;
     object2.destroyAfterDisapering = false;
 
     let shape2 = StellarObjectFactory.createComet(
@@ -47,5 +49,23 @@ class TestPlayground extends PlayGround {
     );
     me.physic.addObject(shape2);
     me.physic.move(shape2);
+
+    var object3 = Object.assign(new PlayGroundOption(), {});
+    object3.minSize = 5;
+    object3.maxSize = 6;
+    object3.maxSpeedOfObject = 2;
+    object3.xRespawn = 1200;
+    object3.yRespawn = 500;
+    object3.xVector = 0;
+    object3.yVector = -1;
+    object3.destroyAfterDisapering = false;
+
+    let shape3 = StellarObjectFactory.createComet(
+      object3,
+      this.context,
+      colorPicker
+    );
+    me.physic.addObject(shape3);
+    me.physic.move(shape3);
   }
 }

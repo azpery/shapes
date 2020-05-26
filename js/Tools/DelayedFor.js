@@ -1,7 +1,7 @@
-class DelayedFor{
-    constructor(from, to, step, next, delay){
+class DelayedFor {
+    constructor(from, to, step, next, delay) {
         this.next = next
-        this.from = from 
+        this.from = from
         this.to = to
         this.step = step
         this.delay = delay
@@ -9,18 +9,21 @@ class DelayedFor{
         this.continue = true
     }
 
-    go(){
-        if(this.cursor < this.to && this.continue){
-            var me = this
-            this.timeout = setTimeout(function(){
+    go() {
+
+        var me = this
+        this.timeout = setInterval(function () {
+            if (me.cursor < me.to && me.continue) {
                 me.next()
                 me.cursor += me.step
-                me.go()
-            }, this.delay)
-        }
+            }else{
+                me.timeout = null
+            }
+        }, this.delay)
+
     }
 
-    stop(){
+    stop() {
         this.continue = false
     }
 }

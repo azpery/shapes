@@ -31,4 +31,7 @@ class PlayGroundOption{
     attractionRadius = 50;
 
     attractionStrength = 6;
+
+    xVector;
+    yVector;
 }

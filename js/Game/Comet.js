@@ -84,23 +84,39 @@ class Comet extends Shape {
     return Math.PI * (this.radius * this.radius);
   }
 
+  getMass() {
+    return this.getSurface() * (5000)
+    // return 10000000 /3
+  }
+
+  getDistanceFrom(obj){
+     var a = Math.abs(obj.y - this.y);
+     var b = Math.abs(obj.x - this.x)
+    return Math.sqrt(a * a + b * b)
+  }
+
+  getGravitationalForce(obj){
+    var dist = this.getDistanceFrom(obj)
+    return G * ((this.getMass() * obj.getMass()) / (dist * dist))
+  }
+
   isColliding(shape) {
     var distance = this.getDistanceFrom(shape);
 
     return distance < this.radius + shape.radius;
   }
 
-  getDistanceFrom(shape) {
-    var dx = this.x - shape.x;
-    var dy = this.y - shape.y;
-    var distance = Math.sqrt(dx * dx + dy * dy);
-    return distance;
-  }
+  // getDistanceFrom(shape) {
+  //   var dx = this.x - shape.x;
+  //   var dy = this.y - shape.y;
+  //   var distance = Math.sqrt(dx * dx + dy * dy);
+  //   return distance;
+  // }
 
   isAttracting(shape, radius) {
-    var distance = this.getDistanceFrom(shape);
+    // var distance = this.getDistanceFrom(shape);
 
-    return distance < this.radius * radius + shape.radius;
+    return true
   }
 
   collide(object) {
@@ -119,17 +135,17 @@ class Comet extends Shape {
     );
     to.radius = wantedRadius;
 
-    var ratio = from.radius / to.radius;
-    if (
-      (to.xVector > 0 && from.xVector < 0) ||
-      (to.xVector < 0 && from.xVector > 0)
-    )
-      to.xVector += Math.floor(from.xVector * ratio);
-    if (
-      (to.yVector > 0 && from.yVector < 0) ||
-      (to.yVector < 0 && from.yVector > 0)
-    )
-      to.yVector += Math.floor(from.yVector * ratio);
+    // var ratio = from.radius / to.radius;
+    // if (
+    //   (to.xVector > 0 && from.xVector < 0) ||
+    //   (to.xVector < 0 && from.xVector > 0)
+    // )
+    //   to.xVector += Math.floor(from.xVector * ratio);
+    // if (
+    //   (to.yVector > 0 && from.yVector < 0) ||
+    //   (to.yVector < 0 && from.yVector > 0)
+    // )
+    //   to.yVector += Math.floor(from.yVector * ratio);
 
     return from;
   }
