@@ -8,7 +8,8 @@ class Comet extends Shape {
     xVector,
     yVector,
     drawline = false,
-    maxCollidedSize
+    maxCollidedSize,
+    density = 1
   ) {
     super(x, y, radius, 0, context);
     this.color = color;
@@ -18,6 +19,7 @@ class Comet extends Shape {
     this.drawline = drawline;
     this.stoped = false;
     this.maxCollidedSize = maxCollidedSize;
+    this.density = density;
   }
 
   move(speed = 1, willMove, didMoved) {
@@ -37,7 +39,7 @@ class Comet extends Shape {
           didMoved(x, y);
         }
       },
-      37 / speed
+      40 / speed
     );
     this.moveEngine.go();
   }
@@ -84,19 +86,23 @@ class Comet extends Shape {
     return Math.PI * (this.radius * this.radius);
   }
 
+  getVolume() {
+    return (4/3) * Math.PI * (this.radius * this.radius * this.radius);
+  }
+
   getMass() {
-    return this.getSurface() * (5000)
+    return (this.getVolume() * ( this.density)) 
     // return 10000000 /3
   }
 
   getDistanceFrom(obj){
      var a = Math.abs(obj.y - this.y);
      var b = Math.abs(obj.x - this.x)
-    return Math.sqrt(a * a + b * b)
+    return Math.sqrt(a * a + b * b) 
   }
 
   getGravitationalForce(obj){
-    var dist = this.getDistanceFrom(obj)
+    var dist = this.getDistanceFrom(obj) * 1000
     return G * ((this.getMass() * obj.getMass()) / (dist * dist))
   }
 
@@ -133,19 +139,19 @@ class Comet extends Shape {
     var wantedRadius = Math.sqrt(
       (to.getSurface() + from.getSurface()) / Math.PI
     );
-    to.radius = wantedRadius;
+    to.radius =  wantedRadius > this.maxCollidedSize ? this.maxCollidedSize : wantedRadius;
 
-    // var ratio = from.radius / to.radius;
-    // if (
-    //   (to.xVector > 0 && from.xVector < 0) ||
-    //   (to.xVector < 0 && from.xVector > 0)
-    // )
-    //   to.xVector += Math.floor(from.xVector * ratio);
-    // if (
-    //   (to.yVector > 0 && from.yVector < 0) ||
-    //   (to.yVector < 0 && from.yVector > 0)
-    // )
-    //   to.yVector += Math.floor(from.yVector * ratio);
+    var ratio = from.radius / to.radius;
+    if (
+      (to.xVector > 0 && from.xVector < 0) ||
+      (to.xVector < 0 && from.xVector > 0)
+    )
+      to.xVector += Math.floor(from.xVector * ratio);
+    if (
+      (to.yVector > 0 && from.yVector < 0) ||
+      (to.yVector < 0 && from.yVector > 0)
+    )
+      to.yVector += Math.floor(from.yVector * ratio);
 
     return from;
   }

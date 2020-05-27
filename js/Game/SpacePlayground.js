@@ -13,7 +13,7 @@ class SpacePlayGround extends PlayGround {
 
     var me = this;
 
-    var object1 = Object.assign(new PlayGroundOption(), {});
+    var object1 = Object.assign(new PlayGroundOption(), this.option);
     object1.minSize = 10;
     object1.maxSize = 15;
     object1.maxSpeedOfObject = 0;
@@ -43,7 +43,7 @@ class SpacePlayGround extends PlayGround {
     // me.physic.addObject(shape2);
     // me.physic.move(shape2);
 
-    var object2 = Object.assign(new PlayGroundOption(), {});
+    var object2 = Object.assign(new PlayGroundOption(), this.option);
     object2.minSize = 5;
     object2.maxSize = 6;
     object2.maxSpeedOfObject = 2;
@@ -61,7 +61,7 @@ class SpacePlayGround extends PlayGround {
     me.physic.addObject(shape2);
     me.physic.move(shape2);
 
-    var object3 = Object.assign(new PlayGroundOption(), {});
+    var object3 = Object.assign(new PlayGroundOption(), this.option);
     object3.minSize = 5;
     object3.maxSize = 6;
     object3.maxSpeedOfObject = 2;

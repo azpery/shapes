@@ -34,4 +34,7 @@ class PlayGroundOption{
 
     xVector;
     yVector;
+    minDensity = 1;
+    maxDensity = 5;
+    density;
 }
