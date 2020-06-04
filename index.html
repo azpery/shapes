@@ -9,15 +9,15 @@
         <title>Coucou</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="">
-        <style>
-            canvas{
-                background-color: #263238;
-            }
-        </style>
+        <link rel="stylesheet" href="./css/main.css">
     </head>
     <body>
-       
+        <div class="toolPicker" id="toolBar">
+            <input id="radius" placeholder="radius" type="number" value="0.5"></input> 
+            <input id="xVector" placeholder="xVector" type="number" value="0"></input> 
+            <input id="yVector" placeholder="yVector" type="number" value="-1"></input> 
+            <input id="density" placeholder="density" type="number" value="60000000"></input> 
+        </div>
         <canvas id="cnvs" width="1664" height="1000"></canvas>
         <script src="./js/Game/Option.js"></script>
         <script src="./js/Game/Interference/Collider.js"></script>

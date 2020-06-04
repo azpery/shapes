@@ -141,17 +141,21 @@ class Comet extends Shape {
     );
     to.radius =  wantedRadius > this.maxCollidedSize ? this.maxCollidedSize : wantedRadius;
 
+    
+
     var ratio = from.radius / to.radius;
-    if (
-      (to.xVector > 0 && from.xVector < 0) ||
-      (to.xVector < 0 && from.xVector > 0)
-    )
-      to.xVector += Math.floor(from.xVector * ratio);
-    if (
-      (to.yVector > 0 && from.yVector < 0) ||
-      (to.yVector < 0 && from.yVector > 0)
-    )
-      to.yVector += Math.floor(from.yVector * ratio);
+
+    to.density = (from.density + to.density) / 2
+    // if (
+    //   (to.xVector > 0 && from.xVector < 0) ||
+    //   (to.xVector < 0 && from.xVector > 0)
+    // )
+    //   to.xVector += Math.floor(from.xVector * ratio);
+    // if (
+    //   (to.yVector > 0 && from.yVector < 0) ||
+    //   (to.yVector < 0 && from.yVector > 0)
+    // )
+    //   to.yVector += Math.floor(from.yVector * ratio);
 
     return from;
   }
