@@ -1,14 +1,23 @@
 class SpacePlayGround extends PlayGround {
-  constructor(width, height, context, gridSize, option = new PlayGroundOption()) {
+  constructor(
+    width,
+    height,
+    context,
+    gridSize,
+    option = new PlayGroundOption()
+  ) {
     super(width, height, context, 0, gridSize);
     this.option = PlayGroundOption.assign(new PlayGroundOption(), option);
     this.physic = new Physic(width, height, this.option);
     this.option.buildToolBar();
 
-    document.addEventListener("optionUpdated", function(e) {
-      this.option[e.detail.name] = e.detail.value
-      console.log("updated" , e.detail.name, "with", e.detail.value); // Prints "Example of an event"
-    }.bind(this));
+    document.addEventListener(
+      "optionUpdated",
+      function (e) {
+        this.option[e.detail.name] = e.detail.value;
+        console.log("updated", e.detail.name, "with", e.detail.value); // Prints "Example of an event"
+      }.bind(this)
+    );
   }
 
   play() {
@@ -30,12 +39,16 @@ class SpacePlayGround extends PlayGround {
             me.context,
             colorPicker
           );
-          me.physic.addObject(shape);
-          me.physic.move(shape)
+          me.addObject(shape);
         }
       },
       this.option.respawnSpeed
     );
     this.moveEngine.go();
+  }
+
+  addObject(object) {
+    this.physic.addObject(object);
+    this.physic.move(object);
   }
 }

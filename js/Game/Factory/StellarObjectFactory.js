@@ -24,4 +24,26 @@ class StellarObjectFactory {
     );
     return shape;
   }
+
+  static createControledComet(option, context, colorPicker) {
+    var x = 800
+    var y = 10
+    var xVector = 0
+    var yVector = 0
+    var radius = 4
+    var density = option.density
+    let shape = new ControledComet(
+      x,
+      y,
+      radius,
+      context,
+      colorPicker.pick(),
+      xVector,
+      yVector,
+      option.keepTrails,
+      option.maxCollidedSize,
+      density
+    );
+    return shape;
+  }
 }
