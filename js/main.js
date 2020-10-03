@@ -6,7 +6,7 @@ const option = {
   respawnSpeed: 50,
   keepTrails: false,
   destroyAfterDisapering: true,
-  maxObjects: 50,
+  maxObjects: 10,
   minSize: 1,
   maxSize: 2,
   maxCollidedSize: 50,
@@ -15,7 +15,7 @@ const option = {
   attractionStrength: 8,
   density: 6000000,
   colors: ["#00897b", "#00695c", "#eeeeee", "#5d4037"],
-  zoom: 1
+  zoom: 2
 };
 var playground = new SpacePlayGround(1664, 1000, ctx, 50, option);
 playground.play();

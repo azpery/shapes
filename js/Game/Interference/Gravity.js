@@ -16,8 +16,8 @@ class Gravity {
             var direction = Math.atan2(obj.x - object.x, obj.y - object.y);
             var attractionX = Math.sin(direction) * gravitationalForce;
             var attractionY = Math.cos(direction) * gravitationalForce;
-            object.xVector += attractionX
-            object.yVector += attractionY
+            object.xVector += Math.abs(attractionX) < 100 ? attractionX : 0;
+            object.yVector += Math.abs(attractionY) < 100 ? attractionY : 0;
             // if(object.x > obj.x){
             //     // object.x -= 1 ;
             //     //if(Math.abs(object.xVector) < 10)

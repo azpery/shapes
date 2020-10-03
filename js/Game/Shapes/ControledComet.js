@@ -34,6 +34,10 @@ class ControledComet extends Comet {
   movingDown = false;
   movingLeft = false;
   movingRight = false;
+  speedUp = this.getSpeedPlus();
+  speedDown = this.getSpeedPlus();
+  speedLeft = this.getSpeedPlus(); 
+  speedRight = this.getSpeedPlus();
 
   control() {
     document.onkeydown = (e) => {
@@ -64,11 +68,14 @@ class ControledComet extends Comet {
   }
 
   willMove(x, y) {
-    let speed = 0.1;
-    if (this.movingUp) this.yVector -= speed;
-    if (this.movingDown) this.yVector += speed;
-    if (this.movingLeft) this.xVector -= speed;
-    if (this.movingRight) this.xVector += speed;
+    if (this.movingUp){ this.yVector -= this.speedUp; this.speedUp += this.getSpeedPlus();this.speedDown -= this.speedDown > this.getSpeedPlus() ? this.getSpeedPlus():0;};
+    if (this.movingDown){ this.yVector += this.speedDown; this.speedDown += this.getSpeedPlus();this.speedUp -= this.speedUp > this.getSpeedPlus() ? this.getSpeedPlus():0;}
+    if (this.movingLeft){ this.xVector -= this.speedLeft; this.speedLeft += this.getSpeedPlus();this.speedRight -= this.speedRight > this.getSpeedPlus() ? this.getSpeedPlus():0;}
+    if (this.movingRight) {this.xVector += this.speedRight; this.speedRight += this.getSpeedPlus();this.speedLeft -= this.speedLeft > this.getSpeedPlus() ? this.getSpeedPlus():0;}
+  }
+
+  getSpeedPlus() {
+    return 0.0003;
   }
 
   didMove(x, y) {}
