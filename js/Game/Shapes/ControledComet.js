@@ -64,7 +64,7 @@ class ControledComet extends Comet {
   }
 
   willMove(x, y) {
-    let speed = 0.1;
+    let speed = 0.01;
     if (this.movingUp) this.yVector -= speed;
     if (this.movingDown) this.yVector += speed;
     if (this.movingLeft) this.xVector -= speed;

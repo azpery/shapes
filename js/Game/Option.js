@@ -59,7 +59,7 @@ class PlayGroundOption extends Object {
   }
 
   optionChanged(element) {
-    let event = new CustomEvent("optionUpdated", { "detail":element.target});
+    let event = new CustomEvent("optionUpdated", { detail: element.target });
     document.dispatchEvent(event);
   }
 }

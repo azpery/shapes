@@ -1,7 +1,7 @@
 var c = document.getElementById("cnvs");
 var ctx = c.getContext("2d");
 const option = {
-  bounce: true,
+  bounce: false,
   speed: 100,
   respawnSpeed: 50,
   keepTrails: false,
@@ -11,16 +11,25 @@ const option = {
   maxSize: 2,
   maxCollidedSize: 50,
   maxSpeedOfObject: 0,
-  attractionRadius: 24,
+  attractionRadius: 10000,
   attractionStrength: 8,
   density: 6000000,
-  colors: ["#00897b", "#00695c", "#eeeeee", "#5d4037"],
-  zoom: 1
+  zoom: 0.2,
 };
-var playground = new SpacePlayGround(1664, 1000, ctx, 50, option);
+var playground = new SpacePlayGround(
+  window.outerWidth,
+  window.outerHeight,
+  ctx,
+  50,
+  option
+);
 playground.play();
 
-let controlledComet = StellarObjectFactory.createControledComet(option, ctx, new ColorPicker(['#c62828']))
+let controlledComet = StellarObjectFactory.createControledComet(
+  option,
+  ctx,
+  new ColorPicker(["#c62828"])
+);
 playground.addObject(controlledComet);
 
 // var playground = new TestPlayground(1664, 1000, ctx, 50, {
@@ -35,7 +44,6 @@ playground.addObject(controlledComet);
 //   colors:["#00897b", "#00695c", "#eeeeee", "#5d4037"]
 // });
 // playground.play();
-
 
 // var c = document.getElementById("cnvs");
 // var ctx = c.getContext("2d");

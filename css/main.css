@@ -1,5 +1,6 @@
 .toolPicker {
     position: fixed;
+    display: none;
     background: brown;
     top: 0;
     left: 0;
@@ -10,4 +11,5 @@
 
 canvas{
     background-color: #263238;
+    overflow: hidden;
 }
