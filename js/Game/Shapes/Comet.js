@@ -26,30 +26,47 @@ class Comet extends Shape {
     var x = this.x;
     var y = this.y;
     var me = this;
-    this.moveEngine = new DelayedFor(
-      0,
-      100000000000000,
-      1,
-      function () {
-        if (!me.stoped) {
-          x += me.xVector;
-          y += me.yVector;
-          willMove(x, y);
-          me.updatePosition(x, y);
-          didMoved(x, y);
-        }
-      },
-      40 / speed
-    );
-    this.moveEngine.go();
+    this.willMove = willMove;
+    this.didMoved = didMoved;
+    // this.moveEngine = new DelayedFor(
+    //   0,
+    //   100000000000000,
+    //   1,
+    //   function () {
+    //     if (!me.stoped) {
+    //       x += me.xVector;
+    //       y += me.yVector;
+    //       willMove(x, y);
+    //       me.updatePosition(x, y);
+    //       didMoved(x, y);
+    //     }
+    //   },
+    //   40 / speed
+    // );
+    // this.moveEngine.go();
+
+    loop.addHook(this);
+  }
+
+  hook() {
+    if (!this.stoped) {
+      var x = this.x;
+      var y = this.y;
+      x += this.xVector;
+      y += this.yVector;
+      this.willMove(x, y);
+      this.updatePosition(x, y);
+      this.didMoved(x, y);
+    }
   }
 
   stop() {
     if (!this.stoped) {
       this.stoped = true;
       this.clearCurrentPosition();
-      this.moveEngine.stop();
-      delete this.moveEngine;
+      // this.moveEngine.stop();
+      // delete this.moveEngine;
+      loop.removeHook(this.hook);
     }
   }
 
@@ -87,23 +104,23 @@ class Comet extends Shape {
   }
 
   getVolume() {
-    return (4/3) * Math.PI * (this.radius * this.radius * this.radius);
+    return (4 / 3) * Math.PI * (this.radius * this.radius * this.radius);
   }
 
   getMass() {
-    return (this.getVolume() * ( this.density)) 
+    return this.getVolume() * this.density;
     // return 10000000 /3
   }
 
-  getDistanceFrom(obj){
-     var a = Math.abs(obj.y - this.y);
-     var b = Math.abs(obj.x - this.x)
-    return Math.sqrt(a * a + b * b) 
+  getDistanceFrom(obj) {
+    var a = Math.abs(obj.y - this.y);
+    var b = Math.abs(obj.x - this.x);
+    return Math.sqrt(a * a + b * b);
   }
 
-  getGravitationalForce(obj){
-    var dist = this.getDistanceFrom(obj) * 1000
-    return G * ((this.getMass() * obj.getMass()) / (dist * dist))
+  getGravitationalForce(obj) {
+    var dist = this.getDistanceFrom(obj) * 1000;
+    return G * ((this.getMass() * obj.getMass()) / (dist * dist));
   }
 
   isColliding(shape) {
@@ -122,7 +139,7 @@ class Comet extends Shape {
   isAttracting(shape, radius) {
     // var distance = this.getDistanceFrom(shape);
 
-    return true
+    return true;
   }
 
   collide(object) {
@@ -139,13 +156,12 @@ class Comet extends Shape {
     var wantedRadius = Math.sqrt(
       (to.getSurface() + from.getSurface()) / Math.PI
     );
-    to.radius =  wantedRadius > this.maxCollidedSize ? this.maxCollidedSize : wantedRadius;
-
-    
+    to.radius =
+      wantedRadius > this.maxCollidedSize ? this.maxCollidedSize : wantedRadius;
 
     var ratio = from.radius / to.radius;
 
-    to.density = (from.density + to.density) / 2
+    to.density = (from.density + to.density) / 2;
     // if (
     //   (to.xVector > 0 && from.xVector < 0) ||
     //   (to.xVector < 0 && from.xVector > 0)

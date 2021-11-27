@@ -53,28 +53,29 @@ class SpacePlayGround extends PlayGround {
       this.context,
       new ColorPicker(["#fff"])
     );
-    this.addObject(sun);
+    // this.addObject(sun);
     this.addObject(mercury);
     this.addObject(earth);
     this.addObject(mars);
     this.addObject(moonmars);
 
-    // this.moveEngine = new DelayedFor(
-    //   0,
-    //   100000000000000,
-    //   1,
-    //   function () {
-    //     if (me.physic.objects.length < me.option.maxObjects) {
-    //       let shape = StellarObjectFactory.createComet(
-    //         me.option,
-    //         me.context,
-    //         colorPicker
-    //       );
-    //       me.addObject(shape);
-    //     }
-    //   },
-    //   this.option.respawnSpeed
-    // );
+    this.moveEngine = new DelayedFor(
+      0,
+      100000000000000,
+      1,
+
+      this.option.respawnSpeed
+    );
+    this.moveEngine.addHook(function () {
+      if (me.physic.objects.length < me.option.maxObjects) {
+        let shape = StellarObjectFactory.createComet(
+          me.option,
+          me.context,
+          colorPicker
+        );
+        me.addObject(shape);
+      }
+    });
     this.moveEngine.go();
   }
 

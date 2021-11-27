@@ -1,28 +1,24 @@
 var c = document.getElementById("cnvs");
 var ctx = c.getContext("2d");
 const option = {
-  bounce: false,
+  bounce: true,
   speed: 100,
-  respawnSpeed: 50,
+  respawnSpeed: 1,
   keepTrails: false,
   destroyAfterDisapering: true,
-  maxObjects: 50,
-  minSize: 1,
-  maxSize: 2,
-  maxCollidedSize: 50,
-  maxSpeedOfObject: 0,
-  attractionRadius: 10000,
-  attractionStrength: 8,
-  density: 6000000,
+  maxObjects: 50000,
+  minSize: 2,
+  // xVector: 0.5,
+  // yVector: 0.5,
+  maxSize: 3,
+  maxCollidedSize: 100,
+  maxSpeedOfObject: 0.1,
+  attractionRadius: 10000000,
+  attractionStrength: 10000000,
+  density: 70000,
   zoom: 0.2,
 };
-var playground = new SpacePlayGround(
-  window.outerWidth,
-  window.outerHeight,
-  ctx,
-  50,
-  option
-);
+var playground = new SpacePlayGround(1800, 900, ctx, 50, option);
 playground.play();
 
 // let controlledComet = StellarObjectFactory.createControledComet(
