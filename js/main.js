@@ -25,12 +25,12 @@ var playground = new SpacePlayGround(
 );
 playground.play();
 
-let controlledComet = StellarObjectFactory.createControledComet(
-  option,
-  ctx,
-  new ColorPicker(["#c62828"])
-);
-playground.addObject(controlledComet);
+// let controlledComet = StellarObjectFactory.createControledComet(
+//   option,
+//   ctx,
+//   new ColorPicker(["#c62828"])
+// );
+// playground.addObject(controlledComet);
 
 // var playground = new TestPlayground(1664, 1000, ctx, 50, {
 //   bounce: false,
