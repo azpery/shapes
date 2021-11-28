@@ -1,22 +1,24 @@
 var c = document.getElementById("cnvs");
 var ctx = c.getContext("2d");
 const option = {
-  bounce: true,
+  bounce: false,
   speed: 100,
   respawnSpeed: 1,
   keepTrails: false,
   destroyAfterDisapering: true,
-  maxObjects: 50000,
-  minSize: 2,
+  maxObjects: 500,
+  minSize: 1,
+  width: 4000,
+  heigth: 4000,
   // xVector: 0.5,
   // yVector: 0.5,
-  maxSize: 3,
-  maxCollidedSize: 100,
+  maxSize: 2,
+  maxCollidedSize: 30,
   maxSpeedOfObject: 0.1,
   attractionRadius: 10000000,
   attractionStrength: 10000000,
-  density: 70000,
-  zoom: 0.2,
+  density: 7000000,
+  zoom: 1,
 };
 var playground = new SpacePlayGround(1800, 900, ctx, 50, option);
 playground.play();

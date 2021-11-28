@@ -38,6 +38,6 @@ class DelayedFor {
   }
 }
 
-const loop = new DelayedFor(0, 100000000000000, 1, 1);
+const loop = new DelayedFor(0, 100000000000000, 1, 30);
 
 loop.go();

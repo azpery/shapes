@@ -23,7 +23,7 @@ class StellarObjectFactory {
           ).get()
         : option.yVector;
     var radius =
-      new Random(option.minSize, option.maxSize, 1).get() * option.zoom;
+      new Random(option.minSize, option.maxSize, 0.1).get() * option.zoom;
     var density =
       option.density == undefined
         ? new Random(option.minDensity, option.maxDensity, 1).get()
@@ -43,12 +43,12 @@ class StellarObjectFactory {
     return shape;
   }
 
-  static createControledComet(option, context, colorPicker) {
+  static createControledComet(option, context, colorPicker, comets) {
     var x = 800;
     var y = 500;
     var xVector = 0;
     var yVector = 0;
-    var radius = 1;
+    var radius = 10;
     var density = option.density;
     let shape = new ControledComet(
       x,
@@ -60,7 +60,8 @@ class StellarObjectFactory {
       yVector,
       option.keepTrails,
       option.maxCollidedSize,
-      density
+      density,
+      comets
     );
     return shape;
   }

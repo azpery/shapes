@@ -20,6 +20,8 @@ class Comet extends Shape {
     this.stoped = false;
     this.maxCollidedSize = maxCollidedSize;
     this.density = density;
+    this.nextx = x;
+    this.nexty = y;
   }
 
   move(speed = 1, willMove, didMoved) {
@@ -28,30 +30,15 @@ class Comet extends Shape {
     var me = this;
     this.willMove = willMove;
     this.didMoved = didMoved;
-    // this.moveEngine = new DelayedFor(
-    //   0,
-    //   100000000000000,
-    //   1,
-    //   function () {
-    //     if (!me.stoped) {
-    //       x += me.xVector;
-    //       y += me.yVector;
-    //       willMove(x, y);
-    //       me.updatePosition(x, y);
-    //       didMoved(x, y);
-    //     }
-    //   },
-    //   40 / speed
-    // );
-    // this.moveEngine.go();
 
     loop.addHook(this);
   }
 
   hook() {
     if (!this.stoped) {
-      var x = this.x;
-      var y = this.y;
+      this.clearCurrentPosition();
+      var x = this.nextx;
+      var y = this.nexty;
       x += this.xVector;
       y += this.yVector;
       this.willMove(x, y);
@@ -89,6 +76,8 @@ class Comet extends Shape {
     this.clearCurrentPosition();
     this.x = x;
     this.y = y;
+    this.nextx = x;
+    this.nexty = y;
     this.draw();
   }
 
@@ -153,15 +142,18 @@ class Comet extends Shape {
       from = this;
     }
 
-    var wantedRadius = Math.sqrt(
-      (to.getSurface() + from.getSurface()) / Math.PI
-    );
-    to.radius =
-      wantedRadius > this.maxCollidedSize ? this.maxCollidedSize : wantedRadius;
+    // var wantedRadius = Math.sqrt(
+    //   (to.getSurface() + from.getSurface()) / Math.PI
+    // );
+    // to.radius =
+    //   wantedRadius > this.maxCollidedSize ? this.maxCollidedSize : wantedRadius;
 
     var ratio = from.radius / to.radius;
 
-    to.density = (from.density + to.density) / 2;
+    from.xVector = to.xVector;
+    from.yVector = to.yVector;
+
+    // to.density = (from.density + to.density) / 2;
     // if (
     //   (to.xVector > 0 && from.xVector < 0) ||
     //   (to.xVector < 0 && from.xVector > 0)

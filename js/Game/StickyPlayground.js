@@ -1,4 +1,4 @@
-class SpacePlayGround extends PlayGround {
+class StickyPlayground extends PlayGround {
   constructor(
     width,
     height,
@@ -6,30 +6,10 @@ class SpacePlayGround extends PlayGround {
     gridSize,
     option = new PlayGroundOption()
   ) {
-    option = {
-      bounce: false,
-      speed: 100,
-      respawnSpeed: 1,
-      keepTrails: false,
-      destroyAfterDisapering: false,
-      maxObjects: 500,
-      minSize: 1,
-      width: 4000,
-      height: 4000,
-      // xVector: 0.5,
-      // yVector: 0.5,
-      maxSize: 2,
-      maxCollidedSize: 30,
-      maxSpeedOfObject: 0.1,
-      attractionRadius: 10000000,
-      attractionStrength: 10000000,
-      density: 7000000,
-      zoom: 1,
-    };
-
     super(width, height, context, 0, gridSize);
     this.option = PlayGroundOption.assign(new PlayGroundOption(), option);
-    this.physic = new Physic(width, height, this.option);
+    this.physic = new Physic(width, height, this.option, []);
+    this.physic.interferences.push(new StickyCollider(this.physic.objects));
     this.option.buildToolBar();
 
     document.addEventListener(
@@ -49,14 +29,36 @@ class SpacePlayGround extends PlayGround {
 
     var me = this;
 
-    this.addObject(
-      StellarObjectFactory.createControledComet(
-        this.option,
-        this.context,
-        colorPicker,
-        this.physic.objects
-      )
+    let sun = StellarObjectFactory.createSun(
+      this.option,
+      this.context,
+      new ColorPicker(["#FF6F00"])
     );
+    let earth = StellarObjectFactory.createEarth(
+      this.option,
+      this.context,
+      new ColorPicker(["#0091EA"])
+    );
+    let mercury = StellarObjectFactory.createMercury(
+      this.option,
+      this.context,
+      new ColorPicker(["#E53935"])
+    );
+    let mars = StellarObjectFactory.createMars(
+      this.option,
+      this.context,
+      new ColorPicker(["#D50000"])
+    );
+    let moonmars = StellarObjectFactory.createMoon(
+      this.option,
+      this.context,
+      new ColorPicker(["#fff"])
+    );
+    // this.addObject(sun);
+    this.addObject(mercury);
+    this.addObject(earth);
+    this.addObject(mars);
+    this.addObject(moonmars);
 
     this.moveEngine = new DelayedFor(
       0,

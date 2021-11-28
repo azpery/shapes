@@ -3,12 +3,23 @@ class Physic {
   interferences = [];
   interferencesBeforeMoving = [];
 
-  constructor(width, height, option) {
+  constructor(
+    width,
+    height,
+    option,
+    interferences = [new Collider(this.objects)]
+  ) {
     this.width = width;
     this.height = height;
     this.option = option;
-    this.interferences.push(new Collider(this.objects));
-    this.interferencesBeforeMoving.push(new Gravity(this.objects, option.attractionStrength, option.attractionRadius));
+    interferences.forEach((i) => this.interferences.push(i));
+    this.interferencesBeforeMoving.push(
+      new Gravity(
+        this.objects,
+        option.attractionStrength,
+        option.attractionRadius
+      )
+    );
   }
 
   addObject(object = new Shape()) {
