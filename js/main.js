@@ -6,7 +6,7 @@ const option = {
   respawnSpeed: 1,
   keepTrails: false,
   destroyAfterDisapering: true,
-  maxObjects: 500,
+  maxObjects: 5000,
   minSize: 1,
   width: 4000,
   heigth: 4000,
@@ -17,7 +17,7 @@ const option = {
   maxSpeedOfObject: 0.1,
   attractionRadius: 10000000,
   attractionStrength: 10000000,
-  density: 7000000,
+  density: 70000,
   zoom: 1,
 };
 var playground = new SpacePlayGround(1800, 900, ctx, 50, option);

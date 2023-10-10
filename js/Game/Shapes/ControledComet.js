@@ -10,6 +10,7 @@ class ControledComet extends Comet {
     drawline = false,
     maxCollidedSize,
     density = 1,
+    option,
     comets
   ) {
     super(
@@ -22,10 +23,13 @@ class ControledComet extends Comet {
       yVector,
       drawline,
       maxCollidedSize,
-      density
+      density,
+      option
     );
     this.comets = comets;
+    this.isControlled = true;
     this.control();
+    this.destroyable = false;
   }
 
   LEFT = 37;
@@ -57,10 +61,11 @@ class ControledComet extends Comet {
   move(speed, willMove, didMove) {
     // this.willMove = willMove;
     // this.didMoved = didMoved;
+
     super.move(
       0,
       ((x, y) => {
-        // willMove(x, y);
+        willMove(x, y);
         this.willMoveComet(x, y);
       }).bind(this),
       didMove
@@ -68,20 +73,19 @@ class ControledComet extends Comet {
   }
 
   willMoveComet(x, y) {
-    let speed = 0.1;
+    let speed = 2;
     if (this.movingUp) this.yVector -= speed;
     if (this.movingDown) this.yVector += speed;
     if (this.movingLeft) this.xVector -= speed;
     if (this.movingRight) this.xVector += speed;
+
     this.comets.forEach((comet) => {
       comet.nextx -= this.xVector;
       comet.nexty -= this.yVector;
     });
   }
 
-  moveAllComets() {}
-
-  didMove(x, y) {}
+  // didMove(x, y) {}
   hook() {
     if (!this.stoped) {
       var x = this.x;

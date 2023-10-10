@@ -39,6 +39,8 @@ class PlayGroundOption extends Object {
   density;
   zoom = 1;
 
+  rects = { x: 0, y: 0, w: 1600, h: 1000 };
+
   buildToolBar() {
     let toolbar = document.getElementById("toolBar");
     toolbar.innerHTML = "";
@@ -61,6 +63,20 @@ class PlayGroundOption extends Object {
   optionChanged(element) {
     let event = new CustomEvent("optionUpdated", { detail: element.target });
     document.dispatchEvent(event);
+  }
+
+  inFrame(x, y) {
+    return (
+      x >= this.rects.x &&
+      x <= this.rects.x + this.rects.w &&
+      y >= this.rects.y &&
+      y <= this.rects.y + this.rects.h
+    );
+  }
+
+  updateFrame(x, y) {
+    this.rects.x = x;
+    this.rects.y = y;
   }
 }
 

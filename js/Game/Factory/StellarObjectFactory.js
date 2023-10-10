@@ -38,7 +38,8 @@ class StellarObjectFactory {
       yVector,
       option.keepTrails,
       option.maxCollidedSize,
-      density
+      density,
+      option
     );
     return shape;
   }
@@ -48,7 +49,7 @@ class StellarObjectFactory {
     var y = 500;
     var xVector = 0;
     var yVector = 0;
-    var radius = 10;
+    var radius = 3;
     var density = option.density;
     let shape = new ControledComet(
       x,
@@ -61,6 +62,30 @@ class StellarObjectFactory {
       option.keepTrails,
       option.maxCollidedSize,
       density,
+      option,
+      comets
+    );
+    return shape;
+  }
+  static createSpaceCraft(option, context, colorPicker, comets) {
+    var x = 800;
+    var y = 500;
+    var xVector = 0;
+    var yVector = 0;
+    var radius = 0.0001;
+    var density = option.density;
+    let shape = new SpaceCraft(
+      x,
+      y,
+      radius,
+      context,
+      colorPicker.pick(),
+      xVector,
+      yVector,
+      option.keepTrails,
+      option.maxCollidedSize,
+      density,
+      option,
       comets
     );
     return shape;

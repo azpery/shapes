@@ -11,8 +11,10 @@ class Collider {
       if (object && obj.id != object.id && obj.isColliding(object)) {
         didcollide = true;
         var collidedObject = obj.collide(object);
-        // collidedObject.stop();
-        // ArrayTool.getInstance().removeObject(this.objects, collidedObject)
+        if (collidedObject !== undefined) {
+          collidedObject.stop();
+          ArrayTool.getInstance().removeObject(this.objects, collidedObject);
+        }
       }
     });
     return didcollide;

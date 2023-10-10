@@ -9,7 +9,8 @@ class Comet extends Shape {
     yVector,
     drawline = false,
     maxCollidedSize,
-    density = 1
+    density = 1,
+    option = new PlayGroundOption()
   ) {
     super(x, y, radius, 0, context);
     this.color = color;
@@ -22,6 +23,8 @@ class Comet extends Shape {
     this.density = density;
     this.nextx = x;
     this.nexty = y;
+    this.destroyable = true;
+    this.option = option;
   }
 
   move(speed = 1, willMove, didMoved) {
@@ -73,12 +76,13 @@ class Comet extends Shape {
   }
 
   updatePosition(x, y) {
-    this.clearCurrentPosition();
+    if (this.option.inFrame(x, y)) this.clearCurrentPosition();
+    if (this.y == y && this.x == x) console.log("is static", this.id);
     this.x = x;
     this.y = y;
     this.nextx = x;
     this.nexty = y;
-    this.draw();
+    if (this.option.inFrame(x, y)) this.draw();
   }
 
   draw() {
@@ -142,29 +146,34 @@ class Comet extends Shape {
       from = this;
     }
 
-    // var wantedRadius = Math.sqrt(
-    //   (to.getSurface() + from.getSurface()) / Math.PI
-    // );
-    // to.radius =
-    //   wantedRadius > this.maxCollidedSize ? this.maxCollidedSize : wantedRadius;
-
-    var ratio = from.radius / to.radius;
-
     from.xVector = to.xVector;
     from.yVector = to.yVector;
 
-    // to.density = (from.density + to.density) / 2;
-    // if (
-    //   (to.xVector > 0 && from.xVector < 0) ||
-    //   (to.xVector < 0 && from.xVector > 0)
-    // )
-    //   to.xVector += Math.floor(from.xVector * ratio);
-    // if (
-    //   (to.yVector > 0 && from.yVector < 0) ||
-    //   (to.yVector < 0 && from.yVector > 0)
-    // )
-    //   to.yVector += Math.floor(from.yVector * ratio);
+    if (from.destroyable) {
+      var wantedRadius = Math.sqrt(
+        (to.getSurface() + from.getSurface()) / Math.PI
+      );
+      to.radius =
+        wantedRadius > this.maxCollidedSize
+          ? this.maxCollidedSize
+          : wantedRadius;
 
-    return from;
+      var ratio = from.radius / to.radius;
+
+      to.density = (from.density + to.density) / 2;
+
+      // if (
+      //   (to.xVector > 0 && from.xVector < 0) ||
+      //   (to.xVector < 0 && from.xVector > 0)
+      // )
+      //   to.xVector += Math.floor(from.xVector * ratio);
+      // if (
+      //   (to.yVector > 0 && from.yVector < 0) ||
+      //   (to.yVector < 0 && from.yVector > 0)
+      // )
+      //   to.yVector += Math.floor(from.yVector * ratio);
+
+      return from;
+    }
   }
 }

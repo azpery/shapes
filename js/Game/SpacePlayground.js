@@ -12,22 +12,22 @@ class SpacePlayGround extends PlayGround {
       respawnSpeed: 1,
       keepTrails: false,
       destroyAfterDisapering: false,
-      maxObjects: 500,
-      minSize: 1,
-      width: 4000,
-      height: 4000,
+      maxObjects: 5000,
+      minSize: 0.01,
+      width: 10000,
+      height: 10000,
       // xVector: 0.5,
       // yVector: 0.5,
       maxSize: 2,
-      maxCollidedSize: 30,
-      maxSpeedOfObject: 0.1,
+      maxCollidedSize: 3000,
+      maxSpeedOfObject: 2,
       attractionRadius: 10000000,
       attractionStrength: 10000000,
-      density: 7000000,
-      zoom: 1,
+      density: 700000,
+      zoom: 10,
     };
 
-    super(width, height, context, 0, gridSize);
+    super(width * option.zoom, height * option.zoom, context, 0, gridSize);
     this.option = PlayGroundOption.assign(new PlayGroundOption(), option);
     this.physic = new Physic(width, height, this.option);
     this.option.buildToolBar();
@@ -50,7 +50,7 @@ class SpacePlayGround extends PlayGround {
     var me = this;
 
     this.addObject(
-      StellarObjectFactory.createControledComet(
+      StellarObjectFactory.createSpaceCraft(
         this.option,
         this.context,
         colorPicker,
