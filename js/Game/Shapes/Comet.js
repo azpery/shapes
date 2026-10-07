@@ -62,6 +62,9 @@ class Comet extends Shape {
 
   clearCurrentPosition() {
     if (!this.drawline) {
+      // Erased to transparent, so the background layer (galaxy) shows through
+      this.context.save();
+      this.context.globalCompositeOperation = "destination-out";
       this.context.beginPath();
       this.context.arc(
         this.x,
@@ -71,8 +74,8 @@ class Comet extends Shape {
         2 * Math.PI,
         false
       );
-      this.context.fillStyle = "#263238";
       this.context.fill();
+      this.context.restore();
     }
     // this.context.clearRect(
     //   Math.ceil(this.x) - Math.ceil(this.radius) - 1,

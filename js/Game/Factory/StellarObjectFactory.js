@@ -4,7 +4,7 @@ const HILL_FRACTION = 0.25;
 const MASS_PER_VOLUME = 0.0001;
 
 class StellarObjectFactory {
-  // Sun, its satellites and the neighbouring stars (data in SolarSystemData.js), in the order they must be
+  // Sun, its satellites, the neighbouring stars and the galactic centre (data in SolarSystemData.js), in the order they must be
   // added to the loop: each satellite before its parent, so it is pulled towards where the parent was at
   // the start of the tick
   static createSolarSystem(option, context, x, y) {
@@ -12,6 +12,9 @@ class StellarObjectFactory {
     NEIGHBOURING_STARS.forEach((star) => {
       bodies.push(...this.createStar(option, context, star, x + star.x, y + star.y));
     });
+    bodies.push(
+      ...this.createStar(option, context, GALACTIC_CENTER, x + GALACTIC_CENTER.x, y + GALACTIC_CENTER.y)
+    );
     return bodies;
   }
 

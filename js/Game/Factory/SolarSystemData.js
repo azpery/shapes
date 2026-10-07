@@ -101,7 +101,10 @@ const SUN = {
   ],
 };
 
-// x, y: position relative to the Sun, about 1000 px per light-year
+// Scale of the stars and the galaxy (the solar system itself is far bigger than this scale)
+const LIGHT_YEAR = 1000; // px
+
+// x, y: position relative to the Sun
 const NEIGHBOURING_STARS = [
   {
     name: "Alpha Centauri A", x: -3800, y: 2150, radius: 27, mass: 1.1, color: "#FFF176",
@@ -121,3 +124,9 @@ const NEIGHBOURING_STARS = [
     ],
   },
 ];
+
+// Supermassive black hole at the centre of the Milky Way, 26,000 light-years from the Sun.
+// The galaxy itself is drawn by Galaxy.js around it
+const GALACTIC_CENTER = {
+  name: "Sagittarius A*", x: 26000 * LIGHT_YEAR, y: 0, radius: 40, mass: 4000000, color: "#000000",
+};

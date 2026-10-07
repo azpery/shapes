@@ -31,6 +31,22 @@ class SolarSystemPlayground extends PlayGround {
     let earth = SUN.satellites.find((body) => body.name === "Earth");
     this.time = new TimeDisplay(2 * Math.PI * Math.sqrt(Math.pow(earth.distance, 3) / SUN_MU));
     this.notifications = new CollisionNotifications(this.time);
+    // The Sun is at the centre of the world
+    this.galaxy = new Galaxy(
+      this.camera,
+      width / 2 + GALACTIC_CENTER.x,
+      height / 2 + GALACTIC_CENTER.y,
+      width / 2,
+      height / 2
+    );
+    document.addEventListener("keydown", (e) => {
+      // g: whole galaxy, s: back to the solar system
+      if (e.key === "g") {
+        let area = this.galaxy.getArea();
+        this.camera.fitArea(area.x, area.y, area.width, area.height);
+      }
+      if (e.key === "s") this.camera.reset();
+    });
     this.option.buildToolBar();
 
     document.addEventListener(

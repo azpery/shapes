@@ -60,15 +60,19 @@ class Explosion {
   }
 
   clear() {
+    // Erased to transparent, so the background layer (galaxy) shows through
+    this.context.save();
+    this.context.globalCompositeOperation = "destination-out";
     this.particles.forEach((particle) => {
       if (particle.drawnX === undefined) return;
       this.drawParticle(
         particle.drawnX,
         particle.drawnY,
         particle.drawnRadius + 1 / this.context.getTransform().a,
-        "#263238"
+        "#000000"
       );
     });
+    this.context.restore();
   }
 
   drawParticle(x, y, radius, color) {

@@ -11,6 +11,7 @@
 
 .objectTooltip {
     position: absolute;
+    z-index: 2;
     display: none;
     pointer-events: none;
     padding: 2px 6px;
@@ -23,6 +24,7 @@
 
 .timeDisplay {
     position: fixed;
+    z-index: 2;
     top: 12px;
     left: 12px;
     pointer-events: none;
@@ -35,6 +37,7 @@
 
 .collisionNotifications {
     position: fixed;
+    z-index: 2;
     right: 12px;
     bottom: 12px;
     display: flex;
@@ -71,6 +74,18 @@ body {
 
 canvas{
     display: block;
-    background-color: #263238;
     overflow: hidden;
+}
+
+/* Objects are drawn on a transparent canvas above the galaxy layer */
+#cnvs {
+    position: relative;
+    z-index: 1;
+}
+
+.galaxy {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 0;
 }
