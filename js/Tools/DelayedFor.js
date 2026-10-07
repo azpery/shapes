@@ -33,6 +33,10 @@ class DelayedFor {
     this.next.push(hook);
   }
 
+  prependHook(hook) {
+    this.next.unshift(hook);
+  }
+
   removeHook(hook) {
     let index = this.next.indexOf(hook);
     if (index >= 0) this.next.splice(index, 1);
