@@ -3,7 +3,8 @@
 class Camera {
   // Low enough to see the whole galaxy
   minZoom = 0.000005;
-  maxZoom = 60;
+  // Close enough to see the rocket next to small moons
+  maxZoom = 600;
   // A press moving less than this (css px), released within tapDuration (ms), is a tap
   tapDistance = 8;
   tapDuration = 300;
@@ -17,6 +18,8 @@ class Camera {
     this.tapListeners = [];
     // Pointers (mouse, fingers) currently pressed on the canvas, by id
     this.pointers = new Map();
+    // Function giving the position to keep in the middle, see follow
+    this.followTarget = null;
     this.press = null;
     this.lastTap = null;
 
@@ -60,6 +63,9 @@ class Camera {
     if (this.press && Math.hypot(e.clientX - this.press.x, e.clientY - this.press.y) > this.tapDistance) {
       this.press = null;
     }
+
+    // Dragging with one finger / the mouse looks elsewhere
+    if (this.followTarget && this.pointers.size === 1 && !this.press) this.followTarget = null;
 
     let scale = this.getCssScale();
     this.centerX -= ((after.x - before.x) * scale) / this.zoom;
@@ -132,6 +138,7 @@ class Camera {
   }
 
   fitArea(x, y, width, height) {
+    this.followTarget = null;
     this.zoom = Math.min(
       this.maxZoom,
       Math.max(this.minZoom, Math.min(this.canvas.width / width, this.canvas.height / height))
@@ -161,7 +168,18 @@ class Camera {
     this.listeners.forEach((listener) => listener());
   }
 
+  // Keeps target() (an { x, y } world position) in the middle on every frame, until null or the user drags
+  follow(target) {
+    this.followTarget = target;
+  }
+
   applyTransform(context) {
+    let target = this.followTarget && this.followTarget();
+    if (target) {
+      this.centerX = target.x;
+      this.centerY = target.y;
+      this.apply();
+    }
     context.setTransform(
       this.zoom,
       0,

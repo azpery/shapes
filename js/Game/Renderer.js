@@ -20,6 +20,8 @@ class Renderer {
     }
     this.explosions = [];
     this.layers = [];
+    this.overlays = [];
+    this.updaters = [];
     // Positions of the objects drawn between two steps, while they are swapped
     this.physicsPositions = new Map();
     // How far between the previous and current positions the last frame was drawn
@@ -36,9 +38,14 @@ class Renderer {
     requestAnimationFrame(frame);
   }
 
-  // Extra drawing under the objects, called with the context in world coordinates
-  addLayer(draw) {
-    this.layers.push(draw);
+  // Extra drawing, under the objects (or above them), called with the context in world coordinates
+  addLayer(draw, above = false) {
+    (above ? this.overlays : this.layers).push(draw);
+  }
+
+  // Called on every frame before drawing, with the objects at their drawn positions
+  addUpdater(update) {
+    this.updaters.push(update);
   }
 
   draw(time) {
@@ -55,6 +62,7 @@ class Renderer {
         object.y = object.previousY + (object.y - object.previousY) * progress;
       });
     }
+    this.updaters.forEach((update) => update(time));
     this.drawFrame(time);
     this.physicsPositions.forEach((position, object) => {
       object.x = position.x;
@@ -98,6 +106,7 @@ class Renderer {
 
     this.explosions = this.explosions.filter((explosion) => !explosion.isOver(time));
     this.explosions.forEach((explosion) => explosion.draw(context, time));
+    this.overlays.forEach((overlay) => overlay(context, zoom));
   }
 
   isVisible(object, zoom) {

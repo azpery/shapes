@@ -148,6 +148,125 @@ body {
     text-align: center;
 }
 
+.rocketHud {
+    position: fixed;
+    z-index: 2;
+    display: none;
+    top: calc(12px + env(safe-area-inset-top));
+    right: calc(12px + env(safe-area-inset-right));
+    width: 260px;
+    padding: 10px 12px;
+    border-radius: 6px;
+    background: rgba(0, 0, 0, 0.7);
+    color: #eceff1;
+    font: 13px sans-serif;
+}
+
+.rocketHud > div {
+    margin-bottom: 4px;
+}
+
+.rocketHudHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.rocketHud button {
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.08);
+    color: #eceff1;
+    font: 12px sans-serif;
+    padding: 4px 10px;
+    cursor: pointer;
+}
+
+.rocketHud button:disabled {
+    opacity: 0.4;
+    cursor: default;
+}
+
+.rocketHudFuel {
+    height: 8px;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.15);
+    overflow: hidden;
+}
+
+.rocketHudFuel > div {
+    height: 100%;
+}
+
+.rocketHudStatus {
+    color: #b0bec5;
+}
+
+.rocketWorkshop {
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.rocketWorkshopTitle {
+    margin-bottom: 4px;
+    font-weight: bold;
+}
+
+.rocketWorkshopRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 4px;
+}
+
+.rocketAbort,
+.rocketAssist {
+    width: 100%;
+    margin-top: 6px;
+}
+
+/* Turn and thrust buttons, only on touch screens while playing */
+.rocketControls {
+    position: fixed;
+    z-index: 2;
+    display: none;
+    right: calc(12px + env(safe-area-inset-right));
+    /* Above the view buttons */
+    bottom: calc(64px + env(safe-area-inset-bottom));
+    gap: 10px;
+    touch-action: none;
+}
+
+@media (pointer: coarse) {
+    .rocketControls.active {
+        display: flex;
+    }
+}
+
+.rocketControls button {
+    width: 60px;
+    height: 60px;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 30px;
+    background: rgba(0, 0, 0, 0.6);
+    color: #eceff1;
+    font: 24px sans-serif;
+    touch-action: none;
+}
+
+.rocketControls .rocketControl-thrust {
+    width: 76px;
+    height: 76px;
+    border-radius: 38px;
+}
+
+.rocketControls button:active {
+    background: rgba(255, 255, 255, 0.2);
+}
+
 .viewButtons {
     position: fixed;
     z-index: 2;
@@ -187,6 +306,19 @@ body {
 
     .collisionNotification {
         font-size: 12px;
+    }
+
+    /* Under the speed control, notifications on the other side */
+    .rocketHud {
+        top: calc(100px + env(safe-area-inset-top));
+        left: calc(12px + env(safe-area-inset-left));
+        right: auto;
+        width: 48vw;
+        font-size: 11px;
+    }
+
+    .collisionNotifications {
+        max-width: 44vw;
     }
 }
 

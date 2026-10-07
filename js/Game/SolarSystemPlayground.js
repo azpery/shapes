@@ -51,6 +51,7 @@ class SolarSystemPlayground extends PlayGround {
     this.createViewButtons([
       ["Solar system", "s", () => this.camera.reset()],
       ["Galaxy", "g", () => this.showGalaxy()],
+      ["Rocket", "r", () => this.rocketGame.start()],
     ]);
     this.option.buildToolBar();
 
@@ -93,6 +94,15 @@ class SolarSystemPlayground extends PlayGround {
       this.width / 2,
       this.height / 2
     ).forEach((body) => this.addObject(body));
+    // Needs the bodies
+    this.rocketGame = new RocketGame(
+      this.camera,
+      this.renderer,
+      this.physic.objects,
+      this.option.attractionStrength,
+      this.speedControl,
+      this.notifications
+    );
   }
 
   addObject(object) {

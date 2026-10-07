@@ -16,15 +16,21 @@ class CollisionNotifications {
   }
 
   notify(absorbed, survivor) {
+    this.show([this.createName(absorbed), " crashed into ", this.createName(survivor)]);
+  }
+
+  // Any other news (e.g. from the rocket game)
+  message(text) {
+    this.show([text]);
+  }
+
+  // parts: texts and elements of the first line
+  show(parts) {
     let notification = document.createElement("div");
     notification.className = "collisionNotification";
 
     let title = document.createElement("div");
-    title.append(
-      this.createName(absorbed),
-      " crashed into ",
-      this.createName(survivor)
-    );
+    title.append(...parts);
     notification.append(title);
     if (this.time) {
       let date = document.createElement("div");

@@ -38,6 +38,14 @@ class SpeedControl {
     return button;
   }
 
+  // Closest available speed
+  setSpeed(speed) {
+    let distances = this.speeds.map((value) => Math.abs(Math.log(value / speed)));
+    this.index = distances.indexOf(Math.min(...distances));
+    this.paused = false;
+    this.update();
+  }
+
   togglePause() {
     this.paused = !this.paused;
     this.update();

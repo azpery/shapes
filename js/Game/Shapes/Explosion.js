@@ -3,7 +3,8 @@ class Explosion {
   // ms
   duration = 600;
 
-  constructor(from, to) {
+  // scale: size of the burst (1 for planets at the default zoom)
+  constructor(from, to, scale = 1) {
     this.to = to;
     this.start = performance.now();
 
@@ -18,13 +19,13 @@ class Explosion {
     for (let i = 0; i < count; i++) {
       // Sprayed outward, in a half-circle facing away from the bigger object
       var angle = direction + (Math.random() - 0.5) * Math.PI;
-      var distance = 5 + Math.random() * 15;
+      var distance = (5 + Math.random() * 15) * scale;
       this.particles.push({
         x: impactX,
         y: impactY,
         xTravel: Math.cos(angle) * distance,
         yTravel: Math.sin(angle) * distance,
-        radius: Math.max(0.5, from.radius * (0.2 + Math.random() * 0.3)),
+        radius: Math.max(0.5 * scale, from.radius * (0.2 + Math.random() * 0.3)),
         color: colors[i % colors.length],
       });
     }
