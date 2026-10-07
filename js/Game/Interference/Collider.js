@@ -19,7 +19,6 @@ class Collider {
         didcollide = true;
         var collidedObject = obj.collide(object);
         var survivor = collidedObject === obj ? object : obj;
-        new Explosion(collidedObject, survivor).start();
         document.dispatchEvent(
           new CustomEvent("objectsCollided", {
             detail: { absorbed: collidedObject, survivor: survivor },

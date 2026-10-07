@@ -10,6 +10,7 @@ class StickyPlayground extends PlayGround {
     this.option = PlayGroundOption.assign(new PlayGroundOption(), option);
     this.physic = new Physic(width, height, this.option, []);
     this.physic.interferences.push(new StickyCollider(this.physic.objects));
+    this.renderer = new Renderer(context, this.physic.objects, null, this.option.keepTrails);
     this.option.buildToolBar();
 
     document.addEventListener(

@@ -1,18 +1,24 @@
-// Fills the window with the canvas and lets the user zoom (wheel), pan (drag) and reset (double click)
+// Fills the window with the canvas and lets the user move around, with a mouse or fingers:
+// zoom (wheel or pinch), pan (drag), reset (double click or double tap)
 class Camera {
   // Low enough to see the whole galaxy
   minZoom = 0.000005;
   maxZoom = 60;
+  // A press moving less than this (css px), released within tapDuration (ms), is a tap
+  tapDistance = 8;
+  tapDuration = 300;
 
-  // objects: redrawn right away when the view changes
-  constructor(context, worldWidth, worldHeight, objects = []) {
+  constructor(context, worldWidth, worldHeight) {
     this.context = context;
-    this.objects = objects;
     this.canvas = context.canvas;
     this.worldWidth = worldWidth;
     this.worldHeight = worldHeight;
-    this.dragging = null;
     this.listeners = [];
+    this.tapListeners = [];
+    // Pointers (mouse, fingers) currently pressed on the canvas, by id
+    this.pointers = new Map();
+    this.press = null;
+    this.lastTap = null;
 
     this.resize();
     this.reset();
@@ -29,30 +35,95 @@ class Camera {
       },
       { passive: false }
     );
-    this.canvas.addEventListener("mousedown", (e) => {
-      this.dragging = { x: e.clientX, y: e.clientY };
-      this.canvas.style.cursor = "grabbing";
-    });
-    window.addEventListener("mousemove", (e) => {
-      if (!this.dragging) return;
-      let scale = this.getCssScale();
-      this.centerX -= (e.clientX - this.dragging.x) * scale / this.zoom;
-      this.centerY -= (e.clientY - this.dragging.y) * scale / this.zoom;
-      this.dragging = { x: e.clientX, y: e.clientY };
-      this.apply();
-    });
-    window.addEventListener("mouseup", () => {
-      this.dragging = null;
-      this.canvas.style.cursor = "grab";
-    });
-    this.canvas.addEventListener("dblclick", () => this.reset());
+    this.canvas.addEventListener("pointerdown", (e) => this.pointerDown(e));
+    this.canvas.addEventListener("pointermove", (e) => this.pointerMove(e));
+    this.canvas.addEventListener("pointerup", (e) => this.pointerUp(e));
+    this.canvas.addEventListener("pointercancel", (e) => this.pointerUp(e));
     this.canvas.style.cursor = "grab";
   }
 
+  pointerDown(e) {
+    // Keeps receiving the moves when the pointer leaves the canvas
+    this.canvas.setPointerCapture(e.pointerId);
+    this.pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    // A second finger makes it a pinch, not a tap
+    this.press =
+      this.pointers.size === 1 ? { x: e.clientX, y: e.clientY, time: performance.now() } : null;
+    this.canvas.style.cursor = "grabbing";
+  }
+
+  pointerMove(e) {
+    if (!this.pointers.has(e.pointerId)) return;
+    let before = this.getPointersCenter();
+    this.pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    let after = this.getPointersCenter();
+    if (this.press && Math.hypot(e.clientX - this.press.x, e.clientY - this.press.y) > this.tapDistance) {
+      this.press = null;
+    }
+
+    let scale = this.getCssScale();
+    this.centerX -= ((after.x - before.x) * scale) / this.zoom;
+    this.centerY -= ((after.y - before.y) * scale) / this.zoom;
+    // Pinch: zoom by how much the fingers spread, around their middle
+    if (this.pointers.size >= 2 && before.spread > 0) {
+      this.zoomAt(after.x, after.y, after.spread / before.spread);
+    } else {
+      this.apply();
+    }
+  }
+
+  pointerUp(e) {
+    if (!this.pointers.delete(e.pointerId)) return;
+    if (
+      e.type === "pointerup" &&
+      this.press &&
+      performance.now() - this.press.time < this.tapDuration
+    ) {
+      this.tap(e.clientX, e.clientY);
+    }
+    this.press = null;
+    if (this.pointers.size === 0) this.canvas.style.cursor = "grab";
+  }
+
+  // Double tap resets the view, a single one is passed to the tap listeners
+  tap(clientX, clientY) {
+    let now = performance.now();
+    if (
+      this.lastTap &&
+      now - this.lastTap.time < this.tapDuration &&
+      Math.hypot(clientX - this.lastTap.x, clientY - this.lastTap.y) < this.tapDistance * 3
+    ) {
+      this.lastTap = null;
+      this.reset();
+      return;
+    }
+    this.lastTap = { x: clientX, y: clientY, time: now };
+    this.tapListeners.forEach((listener) => listener(clientX, clientY));
+  }
+
+  // Middle of the first two pointers and how far apart they are (0 with a single pointer)
+  getPointersCenter() {
+    let [first, second] = this.pointers.values();
+    if (!second) return { x: first.x, y: first.y, spread: 0 };
+    return {
+      x: (first.x + second.x) / 2,
+      y: (first.y + second.y) / 2,
+      spread: Math.hypot(first.x - second.x, first.y - second.y),
+    };
+  }
+
+  // Called with the client coordinates of every single tap or click
+  onTap(listener) {
+    this.tapListeners.push(listener);
+  }
+
   resize() {
-    // Resizing a canvas resets its transform, apply() must be called after
-    this.canvas.width = window.innerWidth;
-    this.canvas.height = window.innerHeight;
+    // One canvas pixel per device pixel (at most 2, phones go up to 3) for sharp drawings
+    let ratio = Math.min(window.devicePixelRatio || 1, 2);
+    this.canvas.width = window.innerWidth * ratio;
+    this.canvas.height = window.innerHeight * ratio;
+    this.canvas.style.width = window.innerWidth + "px";
+    this.canvas.style.height = window.innerHeight + "px";
   }
 
   // Fits the whole world in the window
@@ -85,12 +156,13 @@ class Camera {
     this.apply();
   }
 
+  // The Renderer reads the view on every frame, only the listeners need to be told
   apply() {
-    // Objects only erase their own previous position, so the whole frame is wiped
-    // when the view changes and redrawn right away (waiting for the next tick blinks)
-    this.context.setTransform(1, 0, 0, 1, 0, 0);
-    this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    this.context.setTransform(
+    this.listeners.forEach((listener) => listener());
+  }
+
+  applyTransform(context) {
+    context.setTransform(
       this.zoom,
       0,
       0,
@@ -98,10 +170,6 @@ class Camera {
       this.canvas.width / 2 - this.centerX * this.zoom,
       this.canvas.height / 2 - this.centerY * this.zoom
     );
-    this.objects.forEach((object) => {
-      if (!object.stoped) object.draw();
-    });
-    this.listeners.forEach((listener) => listener());
   }
 
   // Canvas px per css px (the canvas can be scaled by css)

@@ -25,8 +25,9 @@
 .timeDisplay {
     position: fixed;
     z-index: 2;
-    top: 12px;
-    left: 12px;
+    /* Clear of the notch and rounded corners on phones */
+    top: calc(12px + env(safe-area-inset-top));
+    left: calc(12px + env(safe-area-inset-left));
     pointer-events: none;
     padding: 4px 10px;
     border-radius: 4px;
@@ -38,8 +39,9 @@
 .collisionNotifications {
     position: fixed;
     z-index: 2;
-    right: 12px;
-    bottom: 12px;
+    right: calc(12px + env(safe-area-inset-right));
+    bottom: calc(12px + env(safe-area-inset-bottom));
+    max-width: 320px;
     display: flex;
     flex-direction: column;
     gap: 6px;
@@ -70,6 +72,52 @@ body {
     margin: 0;
     overflow: hidden;
     background-color: #263238;
+    /* No pull-to-refresh, text selection or grey flash on tap */
+    overscroll-behavior: none;
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.viewButtons {
+    position: fixed;
+    z-index: 2;
+    left: calc(12px + env(safe-area-inset-left));
+    bottom: calc(12px + env(safe-area-inset-bottom));
+    display: flex;
+    gap: 8px;
+}
+
+.viewButtons button {
+    min-height: 40px;
+    padding: 0 16px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 20px;
+    background: rgba(0, 0, 0, 0.6);
+    color: #eceff1;
+    font: 14px sans-serif;
+    cursor: pointer;
+}
+
+.viewButtons button:active {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+/* Phones: smaller texts, notifications at the top, out of the way of the buttons */
+@media (max-width: 600px) {
+    .timeDisplay {
+        font-size: 12px;
+    }
+
+    .collisionNotifications {
+        top: calc(48px + env(safe-area-inset-top));
+        bottom: auto;
+        max-width: 70vw;
+    }
+
+    .collisionNotification {
+        font-size: 12px;
+    }
 }
 
 canvas{
@@ -81,6 +129,8 @@ canvas{
 #cnvs {
     position: relative;
     z-index: 1;
+    /* Fingers move the camera, not the page */
+    touch-action: none;
 }
 
 .galaxy {

@@ -124,6 +124,8 @@ class StellarObjectFactory {
     );
     body.name = data.name;
     body.orbiting = orbiting;
+    // See BodyAppearances.js: unlisted bodies are rocks, or stars when they orbit nothing
+    body.appearance = BODY_APPEARANCES[data.name] || (orbiting === null ? { type: "star" } : {});
     return body;
   }
 

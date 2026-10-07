@@ -117,6 +117,8 @@ class Galaxy {
     if (this.canvas.width !== width || this.canvas.height !== height) {
       this.canvas.width = width;
       this.canvas.height = height;
+      this.canvas.style.width = this.camera.canvas.style.width;
+      this.canvas.style.height = this.camera.canvas.style.height;
     }
     this.context.globalCompositeOperation = "source-over";
     this.context.globalAlpha = 1;

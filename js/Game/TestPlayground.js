@@ -9,6 +9,7 @@ class TestPlayground extends PlayGround {
     super(width, height, context, 0, gridSize);
     this.option = Object.assign(new PlayGroundOption(), option);
     this.physic = new Physic(width, height, option);
+    this.renderer = new Renderer(context, this.physic.objects, null, this.option.keepTrails);
   }
 
   play() {

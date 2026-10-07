@@ -26,7 +26,8 @@ class SolarSystemPlayground extends PlayGround {
       zoom: 2,
     });
     this.physic = new Physic(width, height, this.option);
-    this.camera = new Camera(context, width, height, this.physic.objects);
+    this.camera = new Camera(context, width, height);
+    this.renderer = new Renderer(context, this.physic.objects, this.camera, this.option.keepTrails);
     this.tooltip = new ObjectTooltip(this.camera, this.physic.objects);
     let earth = SUN.satellites.find((body) => body.name === "Earth");
     this.time = new TimeDisplay(2 * Math.PI * Math.sqrt(Math.pow(earth.distance, 3) / SUN_MU));
@@ -39,14 +40,11 @@ class SolarSystemPlayground extends PlayGround {
       width / 2,
       height / 2
     );
-    document.addEventListener("keydown", (e) => {
-      // g: whole galaxy, s: back to the solar system
-      if (e.key === "g") {
-        let area = this.galaxy.getArea();
-        this.camera.fitArea(area.x, area.y, area.width, area.height);
-      }
-      if (e.key === "s") this.camera.reset();
-    });
+    // Buttons for touch screens, keys g and s on a keyboard
+    this.createViewButtons([
+      ["Solar system", "s", () => this.camera.reset()],
+      ["Galaxy", "g", () => this.showGalaxy()],
+    ]);
     this.option.buildToolBar();
 
     document.addEventListener(
@@ -56,6 +54,29 @@ class SolarSystemPlayground extends PlayGround {
         console.log("updated", e.detail.name, "with", e.detail.value); // Prints "Example of an event"
       }.bind(this)
     );
+  }
+
+  showGalaxy() {
+    let area = this.galaxy.getArea();
+    this.camera.fitArea(area.x, area.y, area.width, area.height);
+  }
+
+  // views: [label, key, action]
+  createViewButtons(views) {
+    let bar = document.createElement("div");
+    bar.className = "viewButtons";
+    views.forEach(([label, key, action]) => {
+      let button = document.createElement("button");
+      button.textContent = label;
+      button.title = label + " (" + key + ")";
+      button.addEventListener("click", action);
+      bar.append(button);
+    });
+    document.body.append(bar);
+    document.addEventListener("keydown", (e) => {
+      let view = views.find(([, key]) => key === e.key);
+      if (view) view[2]();
+    });
   }
 
   play() {

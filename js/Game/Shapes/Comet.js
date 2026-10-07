@@ -39,7 +39,6 @@ class Comet extends Shape {
 
   hook() {
     if (!this.stoped) {
-      this.clearCurrentPosition();
       // Velocity first (gravity), then position: the other way round adds energy
       // every tick and orbits spiral outward
       this.willMove(this.nextx, this.nexty);
@@ -53,48 +52,22 @@ class Comet extends Shape {
   stop() {
     if (!this.stoped) {
       this.stoped = true;
-      this.clearCurrentPosition();
       // this.moveEngine.stop();
       // delete this.moveEngine;
       loop.removeHook(this);
     }
   }
 
-  clearCurrentPosition() {
-    if (!this.drawline) {
-      // Erased to transparent, so the background layer (galaxy) shows through
-      this.context.save();
-      this.context.globalCompositeOperation = "destination-out";
-      this.context.beginPath();
-      this.context.arc(
-        this.x,
-        this.y,
-        this.getDrawnRadius() + this.getPixelSize(),
-        0,
-        2 * Math.PI,
-        false
-      );
-      this.context.fill();
-      this.context.restore();
-    }
-    // this.context.clearRect(
-    //   Math.ceil(this.x) - Math.ceil(this.radius) - 1,
-    //   Math.ceil(this.y) - Math.ceil(this.radius) - 1,
-    //   Math.ceil(this.radius) * 2 + 2,
-    //   Math.ceil(this.radius) * 2 + 2
-    // );
-  }
-
+  // Drawing is done by the Renderer, on every animation frame
   updatePosition(x, y) {
-    this.clearCurrentPosition();
     this.x = x;
     this.y = y;
     this.nextx = x;
     this.nexty = y;
-    this.draw();
   }
 
-  draw() {
+  draw(time = performance.now()) {
+    if (this.appearance) return BodyPainter.paint(this, time);
     this.context.beginPath();
     this.context.arc(this.x, this.y, this.getDrawnRadius(), 0, 2 * Math.PI, false);
     this.context.fillStyle = this.color;
