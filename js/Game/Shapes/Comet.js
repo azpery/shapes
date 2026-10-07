@@ -40,11 +40,11 @@ class Comet extends Shape {
   hook() {
     if (!this.stoped) {
       this.clearCurrentPosition();
-      var x = this.nextx;
-      var y = this.nexty;
-      x += this.xVector;
-      y += this.yVector;
-      this.willMove(x, y);
+      // Velocity first (gravity), then position: the other way round adds energy
+      // every tick and orbits spiral outward
+      this.willMove(this.nextx, this.nexty);
+      var x = this.nextx + this.xVector;
+      var y = this.nexty + this.yVector;
       this.updatePosition(x, y);
       this.didMoved(x, y);
     }
