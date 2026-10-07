@@ -30,6 +30,7 @@ class PlayGroundOption extends Object {
 
   attractionRadius = 50;
 
+  // Multiplies G (gravity is computed as an acceleration, independent of the attracted mass)
   attractionStrength = 6;
 
   xVector;

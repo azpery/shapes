@@ -13,7 +13,7 @@ class DelayedFor {
     var me = this;
     this.timeout = setInterval(function () {
       if (me.cursor < me.to && me.continue) {
-        me.next.forEach((hook) => {
+        me.next.slice().forEach((hook) => {
           if (typeof hook === "function") {
             hook();
           } else hook.hook();
@@ -34,7 +34,8 @@ class DelayedFor {
   }
 
   removeHook(hook) {
-    this.next.splice(this.next.indexOf(hook), 1);
+    let index = this.next.indexOf(hook);
+    if (index >= 0) this.next.splice(index, 1);
   }
 }
 

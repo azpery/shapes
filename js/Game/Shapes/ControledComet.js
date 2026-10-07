@@ -25,6 +25,7 @@ class ControledComet extends Comet {
       density
     );
     this.comets = comets;
+    this.canBeAbsorbed = false;
     this.control();
   }
 
@@ -55,12 +56,10 @@ class ControledComet extends Comet {
   }
 
   move(speed, willMove, didMove) {
-    // this.willMove = willMove;
-    // this.didMoved = didMoved;
     super.move(
       0,
       ((x, y) => {
-        // willMove(x, y);
+        willMove(x, y);
         this.willMoveComet(x, y);
       }).bind(this),
       didMove

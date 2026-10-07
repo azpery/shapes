@@ -22,6 +22,7 @@ class Comet extends Shape {
     this.density = density;
     this.nextx = x;
     this.nexty = y;
+    this.canBeAbsorbed = true;
   }
 
   move(speed = 1, willMove, didMoved) {
@@ -53,7 +54,7 @@ class Comet extends Shape {
       this.clearCurrentPosition();
       // this.moveEngine.stop();
       // delete this.moveEngine;
-      loop.removeHook(this.hook);
+      loop.removeHook(this);
     }
   }
 
@@ -108,8 +109,14 @@ class Comet extends Shape {
   }
 
   getGravitationalForce(obj) {
-    var dist = this.getDistanceFrom(obj) * 1000;
+    // Never closer than touching, otherwise overlapping objects get slingshot away
+    var dist =
+      Math.max(this.getDistanceFrom(obj), this.radius + obj.radius) * 1000;
     return G * ((this.getMass() * obj.getMass()) / (dist * dist));
+  }
+
+  getGravitationalAcceleration(obj) {
+    return this.getGravitationalForce(obj) / obj.getMass();
   }
 
   isColliding(shape) {
@@ -134,36 +141,29 @@ class Comet extends Shape {
   collide(object) {
     var from;
     var to;
-    if (this.radius > object.radius) {
-      to = this;
-      from = object;
-    } else {
+    if (
+      !object.canBeAbsorbed ||
+      (this.canBeAbsorbed && object.getMass() > this.getMass())
+    ) {
       to = object;
       from = this;
+    } else {
+      to = this;
+      from = object;
     }
 
-    // var wantedRadius = Math.sqrt(
-    //   (to.getSurface() + from.getSurface()) / Math.PI
-    // );
-    // to.radius =
-    //   wantedRadius > this.maxCollidedSize ? this.maxCollidedSize : wantedRadius;
+    // Inelastic merge: mass and momentum are conserved
+    var toMass = to.getMass();
+    var fromMass = from.getMass();
+    var mass = toMass + fromMass;
+    to.xVector = (to.xVector * toMass + from.xVector * fromMass) / mass;
+    to.yVector = (to.yVector * toMass + from.yVector * fromMass) / mass;
 
-    var ratio = from.radius / to.radius;
-
-    from.xVector = to.xVector;
-    from.yVector = to.yVector;
-
-    // to.density = (from.density + to.density) / 2;
-    // if (
-    //   (to.xVector > 0 && from.xVector < 0) ||
-    //   (to.xVector < 0 && from.xVector > 0)
-    // )
-    //   to.xVector += Math.floor(from.xVector * ratio);
-    // if (
-    //   (to.yVector > 0 && from.yVector < 0) ||
-    //   (to.yVector < 0 && from.yVector > 0)
-    // )
-    //   to.yVector += Math.floor(from.yVector * ratio);
+    var wantedRadius = Math.cbrt(
+      ((to.getVolume() + from.getVolume()) * 3) / (4 * Math.PI)
+    );
+    to.radius = Math.min(wantedRadius, to.maxCollidedSize || wantedRadius);
+    to.density = mass / to.getVolume();
 
     return from;
   }

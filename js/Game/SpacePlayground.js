@@ -22,7 +22,7 @@ class SpacePlayGround extends PlayGround {
       maxCollidedSize: 30,
       maxSpeedOfObject: 0.1,
       attractionRadius: 10000000,
-      attractionStrength: 10000000,
+      attractionStrength: 230000000,
       density: 7000000,
       zoom: 1,
     };

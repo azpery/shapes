@@ -9,34 +9,14 @@ class Gravity {
   }
 
   update(object){
+    if (!object || object.stoped) return;
     this.objects.forEach((obj) => {
-        if (object && obj.id != object.id && obj.isAttracting(object, this.radius) && obj.radius > object.radius) {
-            var distance = obj.getDistanceFrom(object);
-            var gravitationalForce = obj.getGravitationalForce(object);
+        if (obj.id != object.id && !obj.stoped && obj.isAttracting(object, this.radius)) {
+            // Every object pulls every other one; the pull only depends on the attractor's mass
+            var acceleration = obj.getGravitationalAcceleration(object) * this.strength;
             var direction = Math.atan2(obj.x - object.x, obj.y - object.y);
-            var attractionX = Math.sin(direction) * gravitationalForce;
-            var attractionY = Math.cos(direction) * gravitationalForce;
-            object.xVector += attractionX
-            object.yVector += attractionY
-            // if(object.x > obj.x){
-            //     // object.x -= 1 ;
-            //     //if(Math.abs(object.xVector) < 10)
-            //     object.xVector -= gravitationalForce
-            // }else if(object.x < obj.x){
-            //     // object.x += 1;
-            //     //if(Math.abs(object.xVector) < 2)
-            //     object.xVector += gravitationalForce
-            // }
-
-            // if(object.y > obj.y){
-            //     // object.y -= 1;
-            //     //if(Math.abs(object.yVector) < 10)
-            //     object.yVector -= gravitationalForce
-            // }else if(object.x < obj.x){
-            //     // object.y += 1;
-            //     //if(Math.abs(object.yVector) < 10)
-            //     object.yVector += gravitationalForce
-            // }
+            object.xVector += Math.sin(direction) * acceleration;
+            object.yVector += Math.cos(direction) * acceleration;
         }
       });
   }

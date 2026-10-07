@@ -19,7 +19,7 @@ class SolarSystemPlayground extends PlayGround {
       maxCollidedSize: 50,
       maxSpeedOfObject: 0,
       attractionRadius: 24,
-      attractionStrength: 8,
+      attractionStrength: 2350000,
       density: 6000000,
       colors: ["#00897b", "#00695c", "#eeeeee", "#5d4037"],
       zoom: 2,

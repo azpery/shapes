@@ -7,12 +7,19 @@ class Collider {
 
   collide(object) {
     var didcollide = false;
-    this.objects.forEach((obj) => {
-      if (object && obj.id != object.id && obj.isColliding(object)) {
+    // Iterate over a copy: absorbed objects are removed from the list
+    this.objects.slice().forEach((obj) => {
+      if (
+        object &&
+        !object.stoped &&
+        !obj.stoped &&
+        obj.id != object.id &&
+        obj.isColliding(object)
+      ) {
         didcollide = true;
         var collidedObject = obj.collide(object);
-        // collidedObject.stop();
-        // ArrayTool.getInstance().removeObject(this.objects, collidedObject)
+        collidedObject.stop();
+        ArrayTool.getInstance().removeObject(this.objects, collidedObject);
       }
     });
     return didcollide;
