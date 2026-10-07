@@ -8,11 +8,12 @@ class SolarSystemPlayground extends PlayGround {
   ) {
     super(width, height, context, 0, gridSize);
     this.option = PlayGroundOption.assign(new PlayGroundOption(), {
-      bounce: true,
+      // The neighbouring stars are far outside the world bounds
+      bounce: false,
       speed: 100,
       respawnSpeed: 50,
       keepTrails: false,
-      destroyAfterDisapering: true,
+      destroyAfterDisapering: false,
       maxObjects: 10,
       minSize: 1,
       maxSize: 2,
@@ -27,6 +28,9 @@ class SolarSystemPlayground extends PlayGround {
     this.physic = new Physic(width, height, this.option);
     this.camera = new Camera(context, width, height, this.physic.objects);
     this.tooltip = new ObjectTooltip(this.camera, this.physic.objects);
+    let earth = SUN.satellites.find((body) => body.name === "Earth");
+    this.time = new TimeDisplay(2 * Math.PI * Math.sqrt(Math.pow(earth.distance, 3) / SUN_MU));
+    this.notifications = new CollisionNotifications(this.time);
     this.option.buildToolBar();
 
     document.addEventListener(

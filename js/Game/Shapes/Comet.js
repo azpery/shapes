@@ -151,6 +151,13 @@ class Comet extends Shape {
   //   return distance;
   // }
 
+  // Bodies this one orbits, nearest first (moon -> planet -> star)
+  getOrbitedBodies() {
+    let bodies = [];
+    for (let body = this.orbiting; body; body = body.orbiting) bodies.push(body);
+    return bodies;
+  }
+
   isAttracting(shape, radius) {
     // Free objects are pulled by everything
     if (shape.orbiting === undefined) return true;

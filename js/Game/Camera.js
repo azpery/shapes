@@ -1,6 +1,6 @@
 // Fills the window with the canvas and lets the user zoom (wheel), pan (drag) and reset (double click)
 class Camera {
-  minZoom = 0.1;
+  minZoom = 0.05;
   maxZoom = 60;
 
   // objects: redrawn right away when the view changes
