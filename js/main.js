@@ -20,7 +20,8 @@ const option = {
   density: 7000000,
   zoom: 1,
 };
-var playground = new SpacePlayGround(1800, 900, ctx, 50, option);
+// var playground = new SpacePlayGround(1800, 900, ctx, 50, option);
+var playground = new SolarSystemPlayground(1800, 900, ctx, 50, option);
 playground.play();
 
 // let controlledComet = StellarObjectFactory.createControledComet(

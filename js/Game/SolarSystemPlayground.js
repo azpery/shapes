@@ -37,43 +37,12 @@ class SolarSystemPlayground extends PlayGround {
   }
 
   play() {
-    var widths = this.width / this.gridSize;
-    var heights = this.height / this.gridSize;
-
-    var colorPicker = new ColorPicker(this.option.colors);
-
-    var me = this;
-
-    let sun = StellarObjectFactory.createSun(
+    StellarObjectFactory.createSolarSystem(
       this.option,
       this.context,
-      new ColorPicker(["#FF6F00"])
-    );
-    let earth = StellarObjectFactory.createEarth(
-      this.option,
-      this.context,
-      new ColorPicker(["#0091EA"])
-    );
-    let mercury = StellarObjectFactory.createMercury(
-      this.option,
-      this.context,
-      new ColorPicker(["#E53935"])
-    );
-    let mars = StellarObjectFactory.createMars(
-      this.option,
-      this.context,
-      new ColorPicker(["#D50000"])
-    );
-    let moonmars = StellarObjectFactory.createMoon(
-      this.option,
-      this.context,
-      new ColorPicker(["#fff"])
-    );
-    this.addObject(sun);
-    this.addObject(mercury);
-    this.addObject(earth);
-    this.addObject(mars);
-    this.addObject(moonmars);
+      this.width / 2,
+      this.height / 2
+    ).forEach((body) => this.addObject(body));
   }
 
   addObject(object) {

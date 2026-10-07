@@ -23,6 +23,8 @@ class Comet extends Shape {
     this.nextx = x;
     this.nexty = y;
     this.canBeAbsorbed = true;
+    // Body this one is on a fixed orbit around (null for the root, e.g. the Sun), see isAttracting
+    this.orbiting = undefined;
   }
 
   move(speed = 1, willMove, didMoved) {
@@ -133,9 +135,13 @@ class Comet extends Shape {
   // }
 
   isAttracting(shape, radius) {
-    // var distance = this.getDistanceFrom(shape);
-
-    return true;
+    // Free objects are pulled by everything
+    if (shape.orbiting === undefined) return true;
+    // Orbiting bodies are only pulled by what they orbit (moon -> planet -> sun), which keeps the system stable
+    for (let body = shape.orbiting; body; body = body.orbiting) {
+      if (body === this) return true;
+    }
+    return false;
   }
 
   collide(object) {
