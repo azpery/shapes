@@ -25,6 +25,8 @@ class SolarSystemPlayground extends PlayGround {
       zoom: 2,
     });
     this.physic = new Physic(width, height, this.option);
+    this.camera = new Camera(context, width, height, this.physic.objects);
+    this.tooltip = new ObjectTooltip(this.camera, this.physic.objects);
     this.option.buildToolBar();
 
     document.addEventListener(

@@ -63,7 +63,14 @@ class Comet extends Shape {
   clearCurrentPosition() {
     if (!this.drawline) {
       this.context.beginPath();
-      this.context.arc(this.x, this.y, this.radius + 1, 0, 2 * Math.PI, false);
+      this.context.arc(
+        this.x,
+        this.y,
+        this.getDrawnRadius() + this.getPixelSize(),
+        0,
+        2 * Math.PI,
+        false
+      );
       this.context.fillStyle = "#263238";
       this.context.fill();
     }
@@ -86,9 +93,19 @@ class Comet extends Shape {
 
   draw() {
     this.context.beginPath();
-    this.context.arc(this.x, this.y, this.radius, 0, 2 * Math.PI, false);
+    this.context.arc(this.x, this.y, this.getDrawnRadius(), 0, 2 * Math.PI, false);
     this.context.fillStyle = this.color;
     this.context.fill();
+  }
+
+  // Size of one screen pixel in world units, depends on the camera zoom
+  getPixelSize() {
+    return 1 / this.context.getTransform().a;
+  }
+
+  // Never smaller than a pixel, so tiny moons stay visible when zoomed out
+  getDrawnRadius() {
+    return Math.max(this.radius, this.getPixelSize());
   }
 
   getSurface() {

@@ -30,6 +30,7 @@ class SpacePlayGround extends PlayGround {
     super(width, height, context, 0, gridSize);
     this.option = PlayGroundOption.assign(new PlayGroundOption(), option);
     this.physic = new Physic(width, height, this.option);
+    this.camera = new Camera(context, width, height, this.physic.objects);
     this.option.buildToolBar();
 
     document.addEventListener(

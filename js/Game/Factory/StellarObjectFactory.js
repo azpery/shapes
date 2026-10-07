@@ -62,6 +62,7 @@ class StellarObjectFactory {
   // each moon before its planet, so it is pulled towards where the planet was at the start of the tick
   static createSolarSystem(option, context, x, y) {
     let sun = this.createBody(option, context, "#FFB300", 22, SUN_MU, x, y, 0, 0, null);
+    sun.name = "Sun";
     let bodies = [];
     SOLAR_SYSTEM.forEach((planetData) => {
       let planetMu = SUN_MU * planetData.mass;

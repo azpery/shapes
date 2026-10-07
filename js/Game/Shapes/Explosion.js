@@ -65,7 +65,7 @@ class Explosion {
       this.drawParticle(
         particle.drawnX,
         particle.drawnY,
-        particle.drawnRadius + 1,
+        particle.drawnRadius + 1 / this.context.getTransform().a,
         "#263238"
       );
     });

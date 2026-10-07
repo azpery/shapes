@@ -9,7 +9,26 @@
     border-radius: 0px 0px 15px 15px;
 }
 
+.objectTooltip {
+    position: absolute;
+    display: none;
+    pointer-events: none;
+    padding: 2px 6px;
+    border-radius: 4px;
+    background: rgba(0, 0, 0, 0.7);
+    color: #eceff1;
+    font: 12px sans-serif;
+    white-space: nowrap;
+}
+
+body {
+    margin: 0;
+    overflow: hidden;
+    background-color: #263238;
+}
+
 canvas{
+    display: block;
     background-color: #263238;
     overflow: hidden;
 }
