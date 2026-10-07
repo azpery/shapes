@@ -126,6 +126,14 @@ class StellarObjectFactory {
     body.orbiting = orbiting;
     // See BodyAppearances.js: unlisted bodies are rocks, or stars when they orbit nothing
     body.appearance = BODY_APPEARANCES[data.name] || (orbiting === null ? { type: "star" } : {});
+    // Real values, to show real speeds and distances (see OrbitInfo.js)
+    let isStar = body.appearance.type === "star" || body.appearance.type === "blackHole";
+    body.real = {
+      simDistance: data.distance,
+      semiMajorAxis: data.km ?? (data.au === undefined ? undefined : data.au * AU_KM),
+      // Star masses are real (in Suns), not planet ones (made heavier to hold their moons)
+      gm: data.gm ?? (isStar ? (mu / SUN_MU) * SUN_GM : undefined),
+    };
     return body;
   }
 

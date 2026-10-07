@@ -27,11 +27,18 @@ class SolarSystemPlayground extends PlayGround {
     });
     this.physic = new Physic(width, height, this.option);
     this.camera = new Camera(context, width, height);
-    this.renderer = new Renderer(context, this.physic.objects, this.camera, this.option.keepTrails);
-    this.tooltip = new ObjectTooltip(this.camera, this.physic.objects);
+    this.renderer = new Renderer(context, this.physic.objects, this.camera, this.option.keepTrails, loop);
+    this.tooltip = new ObjectTooltip(this.camera, this.physic.objects, this.renderer);
+    this.orbitInfo = new OrbitInfo(
+      this.tooltip,
+      this.renderer,
+      this.physic.objects,
+      this.option.attractionStrength
+    );
     let earth = SUN.satellites.find((body) => body.name === "Earth");
     this.time = new TimeDisplay(2 * Math.PI * Math.sqrt(Math.pow(earth.distance, 3) / SUN_MU));
     this.notifications = new CollisionNotifications(this.time);
+    this.speedControl = new SpeedControl(loop);
     // The Sun is at the centre of the world
     this.galaxy = new Galaxy(
       this.camera,

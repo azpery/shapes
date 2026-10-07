@@ -201,17 +201,22 @@ class BodyPainter {
     disk(false);
   }
 
-  // Ion tail (blue, straight) and dust tail (white, wider), pointing away from the star,
-  // longer when closer to it
+  // Two tails, longer when closer to the star:
+  // - dust tail (white, wide): left behind along the path, then slowly pushed away from the star, so it curves
+  // - ion tail (blue, thin): blown straight away from the star by the solar wind, whatever the direction of travel
   static paintComet(context, body, radius) {
     let light = this.getLightDirection(body);
     if (light) {
       let length = radius * Math.min(80, 6000 / light.distance);
+      let away = { x: -light.x, y: -light.y };
+      let vx = body.xVector - light.star.xVector;
+      let vy = body.yVector - light.star.yVector;
+      let speed = Math.hypot(vx, vy);
+      let behind = speed > 0 ? { x: -vx / speed, y: -vy / speed } : away;
+      this.paintDustTail(context, radius, length * 0.8, behind, away);
       context.save();
-      context.rotate(Math.atan2(-light.y, -light.x));
-      this.paintTail(context, radius, length, 0.6, 1.6, "129, 212, 250", 0.7);
-      context.rotate(0.12);
-      this.paintTail(context, radius, length * 0.7, 0.9, 3, "255, 248, 225", 0.45);
+      context.rotate(Math.atan2(away.y, away.x));
+      this.paintTail(context, radius, length, 0.3, 0.9, "129, 212, 250", 0.55);
       context.restore();
     }
     let coma = context.createRadialGradient(0, 0, 0, 0, 0, radius * 2.5);
@@ -219,6 +224,41 @@ class BodyPainter {
     coma.addColorStop(1, "rgba(224, 247, 250, 0)");
     this.fillCircle(context, radius * 2.5, coma);
     this.fillCircle(context, radius * 0.6, body.color);
+  }
+
+  // Curve leaving along behind, bending towards away; widening as it goes
+  static paintDustTail(context, radius, length, behind, away) {
+    let control = { x: behind.x * length * 0.5, y: behind.y * length * 0.5 };
+    let endX = away.x * 0.6 + behind.x * 0.4;
+    let endY = away.y * 0.6 + behind.y * 0.4;
+    let endLength = Math.hypot(endX, endY) || 1;
+    let end = { x: (endX / endLength) * length, y: (endY / endLength) * length };
+
+    // Edges of the band around the quadratic curve (0, 0) -> control -> end
+    let left = [];
+    let right = [];
+    let steps = 16;
+    for (let i = 0; i <= steps; i++) {
+      let t = i / steps;
+      let x = 2 * (1 - t) * t * control.x + t * t * end.x;
+      let y = 2 * (1 - t) * t * control.y + t * t * end.y;
+      let dx = 2 * (1 - t) * control.x + 2 * t * (end.x - control.x);
+      let dy = 2 * (1 - t) * control.y + 2 * t * (end.y - control.y);
+      let tangent = Math.hypot(dx, dy) || 1;
+      let width = radius * (0.9 + 2.4 * t);
+      left.push([x - (dy / tangent) * width, y + (dx / tangent) * width]);
+      right.push([x + (dy / tangent) * width, y - (dx / tangent) * width]);
+    }
+
+    let gradient = context.createLinearGradient(0, 0, end.x, end.y);
+    gradient.addColorStop(0, "rgba(255, 248, 225, 0.6)");
+    gradient.addColorStop(1, "rgba(255, 248, 225, 0)");
+    context.beginPath();
+    left.forEach(([x, y], i) => (i === 0 ? context.moveTo(x, y) : context.lineTo(x, y)));
+    right.reverse().forEach(([x, y]) => context.lineTo(x, y));
+    context.closePath();
+    context.fillStyle = gradient;
+    context.fill();
   }
 
   static paintTail(context, radius, length, startWidth, endWidth, rgb, alpha) {
@@ -243,7 +283,7 @@ class BodyPainter {
     let dx = star.x - body.x;
     let dy = star.y - body.y;
     let distance = Math.hypot(dx, dy) || 1;
-    return { x: dx / distance, y: dy / distance, distance: distance };
+    return { x: dx / distance, y: dy / distance, distance: distance, star: star };
   }
 
   static getRotation(look, time) {

@@ -6,11 +6,17 @@ class ObjectTooltip {
   // Fingers are less precise
   tapTolerance = 14;
 
-  constructor(camera, objects) {
+  // renderer: optional, to stick to the objects where they are drawn (between two physics steps)
+  constructor(camera, objects, renderer = null) {
     this.camera = camera;
     this.objects = objects;
+    this.renderer = renderer;
     this.mouse = null;
     this.selected = null;
+    this.selectListeners = [];
+    // Object currently labelled: hovered, or else selected
+    this.shown = null;
+    this.details = [];
 
     this.element = document.createElement("div");
     this.element.className = "objectTooltip";
@@ -21,9 +27,7 @@ class ObjectTooltip {
       if (e.pointerType === "mouse") this.mouse = { x: e.clientX, y: e.clientY };
     });
     canvas.addEventListener("pointerleave", () => (this.mouse = null));
-    camera.onTap((x, y) => {
-      this.selected = this.findObjectAt(x, y, this.tapTolerance);
-    });
+    camera.onTap((x, y) => this.select(this.findObjectAt(x, y, this.tapTolerance)));
 
     // Refreshed every frame: objects move under a still pointer, and the label follows the view
     let frame = () => {
@@ -33,18 +37,43 @@ class ObjectTooltip {
     requestAnimationFrame(frame);
   }
 
+  // Called with the selected object, or null when nothing is selected any more
+  onSelect(listener) {
+    this.selectListeners.push(listener);
+  }
+
+  // Extra line under the name: detail(object) returns a text, or null for none
+  addDetail(detail) {
+    this.details.push(detail);
+  }
+
+  select(object) {
+    this.selected = object;
+    this.selectListeners.forEach((listener) => listener(object));
+  }
+
   update() {
-    if (this.selected && this.selected.stoped) this.selected = null;
+    // Absorbed in a collision
+    if (this.selected && this.selected.stoped) this.select(null);
     let shown = (this.mouse && this.findObjectAt(this.mouse.x, this.mouse.y, this.tolerance)) || this.selected;
+    this.shown = shown;
     if (!shown) {
       this.element.style.display = "none";
       return;
     }
-    let corner = this.camera.worldToScreen(shown.x + shown.radius, shown.y - shown.radius);
-    this.element.textContent = shown.name;
+    let position = this.getPosition(shown);
+    let corner = this.camera.worldToScreen(position.x + shown.radius, position.y - shown.radius);
+    let text = [shown.name, ...this.details.map((detail) => detail(shown))]
+      .filter((line) => line)
+      .join("\n");
+    if (this.element.textContent !== text) this.element.textContent = text;
     this.element.style.display = "block";
     this.element.style.left = window.scrollX + corner.x + 6 + "px";
     this.element.style.top = window.scrollY + corner.y - 6 + "px";
+  }
+
+  getPosition(object) {
+    return this.renderer ? this.renderer.getDrawnPosition(object) : object;
   }
 
   // clientX, clientY: screen position; tolerance in screen px
@@ -56,7 +85,8 @@ class ObjectTooltip {
     this.objects.forEach((obj) => {
       if (!obj.name || obj.stoped) return;
       // Distance to the object's edge
-      let distance = Math.hypot(obj.x - world.x, obj.y - world.y) - obj.radius;
+      let position = this.getPosition(obj);
+      let distance = Math.hypot(position.x - world.x, position.y - world.y) - obj.radius;
       if (distance < worldTolerance && distance < closestDistance) {
         closest = obj;
         closestDistance = distance;

@@ -19,7 +19,8 @@
     background: rgba(0, 0, 0, 0.7);
     color: #eceff1;
     font: 12px sans-serif;
-    white-space: nowrap;
+    /* No wrapping, but details on their own lines */
+    white-space: pre;
 }
 
 .timeDisplay {
@@ -79,6 +80,74 @@ body {
     -webkit-tap-highlight-color: transparent;
 }
 
+.objectInfo {
+    position: fixed;
+    z-index: 2;
+    display: none;
+    left: calc(12px + env(safe-area-inset-left));
+    /* Above the view buttons */
+    bottom: calc(64px + env(safe-area-inset-bottom));
+    min-width: 200px;
+    padding: 8px 12px;
+    border-radius: 6px;
+    background: rgba(0, 0, 0, 0.7);
+    color: #eceff1;
+    font: 13px sans-serif;
+    pointer-events: none;
+}
+
+.objectInfoTitle {
+    margin-bottom: 6px;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.objectInfoRows {
+    display: grid;
+    grid-template-columns: auto auto;
+    gap: 3px 14px;
+}
+
+.objectInfoLabel {
+    color: #90a4ae;
+}
+
+.speedControl {
+    position: fixed;
+    z-index: 2;
+    /* Under the date */
+    top: calc(48px + env(safe-area-inset-top));
+    left: calc(12px + env(safe-area-inset-left));
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.speedControl button {
+    width: 40px;
+    height: 40px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 20px;
+    background: rgba(0, 0, 0, 0.6);
+    color: #eceff1;
+    font: 16px sans-serif;
+    cursor: pointer;
+}
+
+.speedControl button:active {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.speedLabel {
+    min-width: 56px;
+    padding: 4px 8px;
+    border-radius: 4px;
+    background: rgba(0, 0, 0, 0.5);
+    color: #eceff1;
+    font: 14px sans-serif;
+    text-align: center;
+}
+
 .viewButtons {
     position: fixed;
     z-index: 2;
@@ -110,7 +179,8 @@ body {
     }
 
     .collisionNotifications {
-        top: calc(48px + env(safe-area-inset-top));
+        /* Under the date and the speed control */
+        top: calc(100px + env(safe-area-inset-top));
         bottom: auto;
         max-width: 70vw;
     }

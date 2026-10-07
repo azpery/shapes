@@ -31,7 +31,7 @@ class SpacePlayGround extends PlayGround {
     this.option = PlayGroundOption.assign(new PlayGroundOption(), option);
     this.physic = new Physic(width, height, this.option);
     this.camera = new Camera(context, width, height);
-    this.renderer = new Renderer(context, this.physic.objects, this.camera, this.option.keepTrails);
+    this.renderer = new Renderer(context, this.physic.objects, this.camera, this.option.keepTrails, loop);
     this.option.buildToolBar();
 
     document.addEventListener(
